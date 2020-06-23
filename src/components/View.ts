@@ -2,22 +2,24 @@ import { dataModel } from "./Model";
 
 export default class View {
     constructor(model: dataModel){
-        let rangeWrapper = document.createElement('div');
-        rangeWrapper.classList.add('fsd-wrapper');
-        let range = document.createElement('div');
-        range.classList.add('fsd-range');
-        rangeWrapper.append(range);
+        let fsd = document.createElement('div');
+        fsd.classList.add('fsd');
+        let fsdInner = document.createElement('div');
+        fsdInner.classList.add('fsd-inner');
+        let fsdRange = document.createElement('div');
+        fsdRange.classList.add('fsd-range');
+        fsdInner.append(fsdRange);
         if (model.interval){
             let startInterval = document.createElement('div');
             let endInterval = document.createElement('div');
             startInterval.classList.add('fsd-start', 'fsd-slider');
             endInterval.classList.add('fsd-end', 'fsd-slider');
-            rangeWrapper.classList.add('fsd-interval');
-            rangeWrapper.append(startInterval, endInterval);
+            fsd.classList.add('fsd-interval');
+            fsdInner.append(startInterval, endInterval);
         } else{
             let slider = document.createElement('div');
             slider.classList.add('fsd-slider');
-            rangeWrapper.append(slider);
+            fsdInner.append(slider);
         }
 
         let scaleOfValues = document.createElement('div');
@@ -38,19 +40,20 @@ export default class View {
                 maxEl?.before(value);
             }
         }
-        rangeWrapper.append(scaleOfValues);
+        fsd.append(scaleOfValues);
 
         if (model.vertical){
-            rangeWrapper.classList.add('fsd-vertical');
+            fsd.classList.add('fsd-vertical');
         }
 
         if (model.prompt){
             let prompt = document.createElement('div');
             prompt.innerHTML = model.currentValue + '';
             prompt.classList.add('fsd-prompt');
+            fsdInner.append(prompt);
         }
-
+        fsd.prepend(fsdInner);
         model.target.innerHTML = '';
-        model.target.append(rangeWrapper);
+        model.target.append(fsd);
     }
 }

@@ -23,7 +23,7 @@ export default class Model {
   }
 
 export  interface dataModel{
-    target: HTMLElement,
+    target: Element,
     max?: number,
     min?: number,
     currentValue?: number,
