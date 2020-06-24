@@ -17,8 +17,8 @@ import "@js/main";
   };
 })($);
 
-interface rangeItem extends HTMLElement {
+export interface rangeItem extends HTMLElement {
   model: Model;
   view: View;
-  Controller: Controller;
+  controller: Controller;
 }

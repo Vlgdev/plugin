@@ -29,13 +29,20 @@
       background: #333;
       position: absolute;
       top: 50%;
-      cursor: pointer;
       transform: translateY(-50%);
       left: 0;
+    }
+    &-slider,
+    &-scale,
+    &-range{
+      cursor: pointer;
     }
     &-scale {
       display: flex;
       justify-content: space-between;
       padding: 0 5px;
+      span{
+        text-align: center;
+      }
     }
   }

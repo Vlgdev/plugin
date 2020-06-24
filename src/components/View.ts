@@ -1,6 +1,9 @@
 import { dataModel } from "./Model";
 
 export default class View {
+
+    public stepsWidth: number;
+
     constructor(model: dataModel){
         let fsd = document.createElement('div');
         fsd.classList.add('fsd');
@@ -9,6 +12,12 @@ export default class View {
         let fsdRange = document.createElement('div');
         fsdRange.classList.add('fsd-range');
         fsdInner.append(fsdRange);
+        let steps: number = 0;
+        let mn: number = model.min!;
+        while (mn < model.max!){
+            steps++;
+            mn += model.step!;
+        }
         if (model.interval){
             let startInterval = document.createElement('div');
             let endInterval = document.createElement('div');
@@ -55,5 +64,18 @@ export default class View {
         fsd.prepend(fsdInner);
         model.target.innerHTML = '';
         model.target.append(fsd);
+        let spans = scaleOfValues.querySelectorAll('span');
+        this.stepsWidth = fsdRange.offsetWidth / steps;
+        for (let i: any = 1; i < spans.length; i++){
+            spans[i].style.marginLeft = this.stepsWidth - spans[i].offsetWidth / 2;
+        }
+        
+        let slider = <HTMLElement>fsdInner.querySelector('.fsd-slider');
+        let left: number = this.stepsWidth * (model.currentValue! - 1);
+        let right: number = fsdRange.offsetWidth - slider.offsetWidth;
+        if (left < 0) left = 0;
+        if (left > right) left = right;
+
+        slider.style.left = left + 'px';
     }
 }

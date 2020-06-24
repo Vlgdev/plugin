@@ -1,5 +1,7 @@
+import {rangeItem} from '../index';
+
 export default class Model {
-  public target: HTMLElement;
+  public target: rangeItem;
   public max: number;
   public min: number;
   public currentValue: number;
@@ -8,7 +10,7 @@ export default class Model {
   public step: number;
   public prompt: boolean;
   public scaleOfValues: boolean;
-    constructor(params?: dataModel) {
+    constructor(params: dataModel) {
       let {target, min = 1, max = 10, currentValue = min, vertical = false, interval = false, step = 1, prompt = false, scaleOfValues = false} = params!;
       this.target = target!;
       this.min = min;
@@ -22,8 +24,10 @@ export default class Model {
     }
   }
 
+
+
 export  interface dataModel{
-    target: Element,
+    target: rangeItem,
     max?: number,
     min?: number,
     currentValue?: number,
