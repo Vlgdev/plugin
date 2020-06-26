@@ -3,6 +3,7 @@ import { dataModel } from "./Model";
 export default class View {
 
     public stepsWidth: number;
+    public curPos: number;
 
     constructor(model: dataModel){
         let fsd = document.createElement('div');
@@ -64,18 +65,24 @@ export default class View {
         fsd.prepend(fsdInner);
         model.target.innerHTML = '';
         model.target.append(fsd);
+        scaleOfValues.style.minHeight = max.offsetHeight + 'px';
         let spans = scaleOfValues.querySelectorAll('span');
-        this.stepsWidth = fsdRange.offsetWidth / steps;
-        for (let i: any = 1; i < spans.length; i++){
-            spans[i].style.marginLeft = this.stepsWidth - spans[i].offsetWidth / 2;
+        this.stepsWidth = fsdRange.offsetWidth / steps / fsdRange.offsetWidth * 100;
+
+        for (let i = 1; i < spans.length - 1; i++){
+            let left = this.stepsWidth * i;
+            spans[i].style.left = left + '%';
         }
-        
+        max.style.left = 100 - max.offsetWidth / fsdRange.offsetWidth * 100 + '%';
+
         let slider = <HTMLElement>fsdInner.querySelector('.fsd-slider');
-        let left: number = this.stepsWidth * (model.currentValue! - 1);
-        let right: number = fsdRange.offsetWidth - slider.offsetWidth;
+        let sliderWidth = slider.offsetWidth / fsdRange.offsetWidth * 100
+        let left: number = this.stepsWidth * (model.currentValue! - 1) - sliderWidth / 2;
+        let right: number = 100 - sliderWidth;
         if (left < 0) left = 0;
         if (left > right) left = right;
 
-        slider.style.left = left + 'px';
+        slider.style.left = left + '%';
+        this.curPos = left;
     }
 }

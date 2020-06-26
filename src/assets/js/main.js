@@ -2,9 +2,9 @@ import $ from 'jquery';
 
 $(function() {
     $('.slider').rangeFSD({
-        max: 12,
+        max: 11,
         scaleOfValues: true,
-        currentValue: 3
+        currentValue: 10
     });
     $('.main__slider').rangeFSD()
 })
