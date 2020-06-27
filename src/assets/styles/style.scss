@@ -1,9 +1,11 @@
 @import "./global";
 @import "./fonts";
 @import "./vars";
-
+body{
+    padding-top: 100px;
+}
 .slider{
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 
 @import "./media";
