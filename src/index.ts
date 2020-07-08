@@ -13,6 +13,61 @@ import "@js/main";
       this[i].model = new Model(params);
       this[i].view = new View(this[i].model);
       this[i].controller = new Controller(this[i].model, this[i].view);
+      Object.defineProperties(this[i], {
+        'min': {
+          get() {
+            return this.model.min
+          }
+        },
+        'max': {
+          get() {
+            return this.model.max
+          }
+        },
+        'currentValue': {
+          get() {
+            if (this.model.interval === true) return null
+             return this.model.currentValue
+          }
+        },
+        'vertical': {
+          get() {
+            return this.model.vertical
+          }
+        },
+        'interval': {
+          get() {
+            return this.model.interval
+          }
+        },
+        'startValue': {
+          get() {
+            if (this.model.interval !== true) return null
+            return this.model.startValue
+          }
+        },
+        'endValue': {
+          get() {
+            if (this.model.interval !== true) return null
+            return this.model.endValue
+          }
+        },
+        'step': {
+          get() {
+            return this.model.step
+          }
+        },
+        'prompt': {
+          get() {
+            return this.model.prompt
+          }
+        },
+        'scaleOfValues': {
+          get() {
+            return this.model.scaleOfValues
+          }
+        }
+      })
     }
   };
 })($);

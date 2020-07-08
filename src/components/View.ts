@@ -119,146 +119,137 @@ export default class View {
         model.target.append(fsd);
 
         if (model.vertical === true) {
-
             this.stepsWidth = fsdRange.offsetHeight / steps / fsdRange.offsetHeight * 100
+        } else {
+            this.stepsWidth = fsdRange.offsetWidth / steps / fsdRange.offsetWidth * 100
+        }
 
-            if (model.prompt === true) {
-                let prompt: HTMLElement = <HTMLElement>fsd.querySelector('.fsd__prompt')
-                let stylePrompt = getComputedStyle(prompt)
-                fsd.style.paddingLeft = max.offsetWidth + parseInt(stylePrompt.paddingLeft) + parseInt(stylePrompt.paddingRight) + 10 + 'px'
-            }
+        if (model.prompt === true && model.vertical === true) {
+            let prompt: HTMLElement = <HTMLElement>fsd.querySelector('.fsd__prompt')
+            let stylePrompt = getComputedStyle(prompt)
+            fsd.style.paddingLeft = max.offsetWidth + parseInt(stylePrompt.paddingLeft) + parseInt(stylePrompt.paddingRight) + 10 + 'px'
+        }
 
+        if (model.vertical === true) {
             scaleOfValues.style.minWidth = max.offsetWidth + 'px'
-            spans = scaleOfValues.querySelectorAll('span')
-            let scaleStep = this.stepsWidth
+        } else {
+            scaleOfValues.style.minHeight = max.offsetHeight + 'px'
+        }
+
+        spans = scaleOfValues.querySelectorAll('span')
+
+        if (model.vertical === true) {
             for (let i: number = 1; i < spans.length - 1; i++) {
-                let top: number = scaleStep * i;
-                spans[i].style.top = top + '%';
+                let distance: number = this.stepsWidth * i;
+                spans[i].style.top = distance + '%';
             }
-            max.style.top = 100 - max.offsetHeight / fsdRange.offsetHeight * 100 + '%';
 
-            let s: number = 0
-            let nextSpan: number
-            let distance: number
-            while (s < spans.length - 1) {
-                nextSpan = 1
-                let cur = s == 0 ? 0 : parseInt(spans[s].style.top)
-                distance = parseInt(spans[s + nextSpan].style.top) - cur
+            max.style.top = 100 - max.offsetHeight / fsdRange.offsetHeight * 100 + '%'
+        } else {
+            for (let i: number = 1; i < spans.length - 1; i++) {
+                let distance: number = this.stepsWidth * i;
+                spans[i].style.left = distance + '%';
+            }
 
-                while (distance < spans[s].offsetHeight / fsdRange.offsetHeight * 100 + 10) {
-                    if (spans[s + nextSpan].classList.contains('fsd__max')) {
-                        spans[s].classList.add('hidden')
-                        break
-                    }
+            max.style.left = 100 - max.offsetWidth / fsdRange.offsetWidth * 100 + '%'
+        }
 
-                    spans[s + nextSpan].classList.add('hidden')
-                    nextSpan++
+        let s: number = 0
+        let nextSpan: number
+        let distance: number
+        while (s < spans.length - 1) {
+            nextSpan = 1
+            let cur: number
 
-                    distance = parseInt(spans[s + nextSpan].style.top) - cur
+            if (s == 0) {
+                cur = 0
+            } else if (model.vertical === true) {
+                cur = parseInt(spans[s].style.top)
+            } else {
+                cur = parseInt(spans[s].style.left)
+            }
+
+            distance = (model.vertical === true ? parseInt(spans[s + nextSpan].style.top) : parseInt(spans[s + nextSpan].style.left)) - cur
+
+            let condition: number
+            if (model.vertical === true) {
+                condition = spans[s].offsetHeight / fsdRange.offsetHeight * 100 + 10
+            } else {
+                condition = spans[s].offsetWidth / fsdRange.offsetWidth * 100 + 10
+            }
+
+            while (distance < condition!) {
+                if (spans[s + nextSpan].classList.contains('fsd__max')) {
+                    spans[s].classList.add('hidden')
+                    break
                 }
 
-                if (spans[s + nextSpan].classList.contains('hidden'))
-                    spans[s + nextSpan].classList.remove('hidden')
+                spans[s + nextSpan].classList.add('hidden')
+                nextSpan++
 
-                s += nextSpan
-
+                distance = (model.vertical === true ? parseInt(spans[s + nextSpan].style.top) : parseInt(spans[s + nextSpan].style.left)) - cur
             }
 
-            if (model.interval === true) {
+            if (spans[s + nextSpan].classList.contains('hidden'))
+                spans[s + nextSpan].classList.remove('hidden')
 
-                let sliderWidth: number = startIntervalWrapper!.offsetHeight / fsdRange.offsetHeight * 100
-                let right = 100 - sliderWidth
+            s += nextSpan
+        }
 
-                let leftStart: number = this.stepsWidth * (model.startValue! - 1) - sliderWidth / 2
-                if (leftStart < 0) leftStart = 0
-                if (leftStart > right) leftStart = right
+        if (model.interval === true) {
 
-                let leftEnd: number = this.stepsWidth * (model.endValue! - 1) - sliderWidth / 2
-                if (leftEnd < 0) leftEnd = 0
-                if (leftEnd > right) leftEnd = right
-
-                lengthInterval!.style.height = leftEnd - leftStart + '%'
-                lengthInterval!.style.top = leftStart + sliderWidth / 2 + '%'
-
-                startIntervalWrapper!.style.top = leftStart + '%'
-                endIntervalWrapper!.style.top = leftEnd + '%'
+            let sliderSize: number = startIntervalWrapper!.offsetHeight / fsdRange.offsetHeight * 100
+            if (model.vertical === true) {
+                sliderSize = startIntervalWrapper!.offsetHeight / fsdRange.offsetHeight * 100
             } else {
+                sliderSize = startIntervalWrapper!.offsetWidth / fsdRange.offsetWidth * 100
+            }
+            let rightEdge = 100 - sliderSize
 
-                let sliderWidth: number = sliderWrapper!.offsetHeight / fsdRange.offsetHeight * 100
-                let left: number = this.stepsWidth * (model.currentValue! - 1) - sliderWidth / 2;
-                let right: number = 100 - sliderWidth;
-                if (left < 0) left = 0;
-                if (left > right) left = right;
+            let start: number = this.stepsWidth * (model.startValue! - 1) - sliderSize / 2
+            if (start < 0) start = 0
+            if (start > rightEdge) start = rightEdge
 
-                sliderWrapper!.style.top = left + '%';
+            let end: number = this.stepsWidth * (model.endValue! - 1) - sliderSize / 2
+            if (end < 0) end = 0
+            if (end > rightEdge) end = rightEdge
+
+            if (model.vertical === true) {
+                lengthInterval!.style.height = end - start + '%'
+                lengthInterval!.style.top = start + sliderSize / 2 + '%'
+            } else {
+                lengthInterval!.style.width = end - start + '%'
+                lengthInterval!.style.left = start + sliderSize / 2 + '%'
+            }
+
+            if (model.vertical === true) {
+                startIntervalWrapper!.style.top = start + '%'
+                endIntervalWrapper!.style.top = end + '%'
+            } else {
+                startIntervalWrapper!.style.left = start + '%'
+                endIntervalWrapper!.style.left = end + '%'
             }
 
         } else {
 
-            this.stepsWidth = fsdRange.offsetWidth / steps / fsdRange.offsetWidth * 100;
-
-            scaleOfValues.style.minHeight = max.offsetHeight + 'px';
-            spans = scaleOfValues.querySelectorAll('span')
-            let scaleStep = this.stepsWidth
-            for (let i: number = 1; i < spans.length - 1; i++) {
-                let left: number = scaleStep * i;
-                spans[i].style.left = left + '%';
-            }
-            max.style.left = 100 - max.offsetWidth / fsdRange.offsetWidth * 100 + '%';
-
-            let s: number = 0
-            let nextSpan: number
-            let distance: number
-            while (s < spans.length - 1) {
-                nextSpan = 1
-                let cur = s == 0 ? 0 : parseInt(spans[s].style.left)
-                distance = parseInt(spans[s + nextSpan].style.left) - cur
-
-                while (distance < spans[s].offsetWidth / fsdRange.offsetWidth * 100 + 10) {
-                    if (spans[s + nextSpan].classList.contains('fsd__max')) {
-                        spans[s].classList.add('hidden')
-                        break
-                    }
-
-                    spans[s + nextSpan].classList.add('hidden')
-                    nextSpan++
-
-                    distance = parseInt(spans[s + nextSpan].style.left) - cur
-                }
-
-                if (spans[s + nextSpan].classList.contains('hidden'))
-                    spans[s + nextSpan].classList.remove('hidden')
-
-                s += nextSpan
-
-            }
-
-            if (model.interval === true) {
-                let sliderWidth: number = startIntervalWrapper!.offsetWidth / fsdRange.offsetWidth * 100
-                let right = 100 - sliderWidth
-
-                let leftStart: number = this.stepsWidth * (model.startValue! - 1) - sliderWidth / 2
-                if (leftStart < 0) leftStart = 0
-                if (leftStart > right) leftStart = right
-
-                let leftEnd: number = this.stepsWidth * (model.endValue! - 1) - sliderWidth / 2
-                if (leftEnd < 0) leftEnd = 0
-                if (leftEnd > right) leftEnd = right
-
-                lengthInterval!.style.width = leftEnd - leftStart + '%'
-                lengthInterval!.style.left = leftStart + sliderWidth / 2 + '%'
-
-                startIntervalWrapper!.style.left = leftStart + '%'
-                endIntervalWrapper!.style.left = leftEnd + '%'
+            let sliderSize: number
+            if (model.vertical === true){
+                sliderSize = sliderWrapper!.offsetHeight / fsdRange.offsetHeight * 100
             } else {
-                let sliderWidth: number = sliderWrapper!.offsetWidth / fsdRange.offsetWidth * 100
-                let left: number = this.stepsWidth * (model.currentValue! - 1) - sliderWidth / 2;
-                let right: number = 100 - sliderWidth;
-                if (left < 0) left = 0;
-                if (left > right) left = right;
-
-                sliderWrapper!.style.left = left + '%';
+                sliderSize = sliderWrapper!.offsetWidth / fsdRange.offsetWidth * 100
             }
+
+            let distance: number = this.stepsWidth * (model.currentValue! - 1) - sliderSize / 2;
+            let rightEdge: number = 100 - sliderSize;
+            if (distance < 0) distance = 0;
+            if (distance > rightEdge) distance = rightEdge;
+
+            if (model.vertical === true){
+                sliderWrapper!.style.top = distance + '%';
+            } else {
+                sliderWrapper!.style.left = distance + '%';
+            }
+            
         }
 
     }
