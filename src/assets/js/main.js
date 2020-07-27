@@ -2,14 +2,13 @@ import $ from 'jquery';
 
 $(function() {
     $('.slider').rangeFSD({
-        max: 1000,
-        vertical: true,
-        startValue: 500,
-        currentValue: 10,
+        max: 500,
+        min: 0,
         scaleOfValues: true,
-        interval: true
+        interval: true,
+        step: 1,
     });
-    $('.main__slider').rangeFSD()
-    let slider = document.querySelector('.slider')
-    console.log(slider.prompt)
+    $('.main-slider').rangeFSD({
+        currentValue: 6
+    })
 })

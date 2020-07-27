@@ -5,5 +5,30 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Test plugin
     body
-       .slider 
-       .main__slider
+        .slider-wrapper
+            .slider
+            .config
+                .config__title Одиночное значение
+                label.config__label(for="slider__currentVal") Текущее значение
+                input.config__input(type="number" name="currentVal" id="slider__currentVal" value="23")
+                label.config__label(for="slider__progressBar") Шкала прогресса
+                input.config__checkbox#slider__progressBar(type="checkbox" name="progressBar")
+                .config__title Интервал
+                label.config__label(for="slider__interval") Включить интервальное значение?
+                input.config__checkbox(type="checkbox" name="interval" id="slider__interval")
+                label.config__label(for="slider__start") Начальное значение
+                input#slider__start(type="number", name="startValue")
+                label.config__label(for="slider__end") Конечное значение
+                input#slider__end(type="number", name="endValue")
+                .config__title Общие настройки
+                label.config__label(for="slider__min") Минимальное значение
+                input#slider__min(type="number", name="min")
+                label.config__label(for="slider__max") Максимальное значение
+                input#slider__max(type="number", name="max")
+                label.config__label(for="slider__step") Размер шага
+                input#slider__step(type="number", name="step")
+                label.config__label(for="slider__scale") Шкала значений
+                input#slider__scale.config__checkbox(type="checkbox", name="scale")
+                label.config__label(for="slider__prompt") Подсказка
+                input#slider__prompt.config__checkbox(type="checkbox", name="prompt")
+        .main-slider

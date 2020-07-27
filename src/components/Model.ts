@@ -13,9 +13,10 @@ export default class Model {
   public step: number;
   public prompt: boolean;
   public scaleOfValues: boolean;
+  public progressBar: boolean;
 
     constructor(params: dataModel) {
-      let {target, min = 1, max = 10, currentValue = min, vertical = false, interval = false, step = 1, prompt = true, scaleOfValues = false, startValue = min, endValue = max} = params!;
+      let {target, min = 1, max = 10, currentValue = min, vertical = false, interval = false, step = 1, prompt = true, scaleOfValues = false, startValue = min, endValue = max, progressBar = true} = params!;
       this.target = target!;
       this.min = min;
       this.max = max;
@@ -27,6 +28,45 @@ export default class Model {
       this.step = step;
       this.prompt = prompt;
       this.scaleOfValues = scaleOfValues;
+      this.progressBar = progressBar;
+      this.checkMinMax();
+      this.checkCurVal();
+      this.checkStartVal();
+      this.checkEndVal();
+    }
+
+    checkMinMax() {
+      
+      if (this.min >= this.max){
+        this.min = this.max - this.step
+      }
+
+      if (this.max - this.min < this.step){
+        this.step = this.max - this.min
+      }
+      
+    }
+
+    checkCurVal() {
+      if (this.currentValue < this.min){
+        this.currentValue = this.min
+      } else if (this.currentValue > this.max){
+        this.currentValue = this.max
+      }
+    }
+    checkStartVal() {
+      if (this.startValue < this.min){
+        this.startValue = this.min
+      } else if (this.startValue > this.endValue){
+        this.startValue = this.endValue
+      }
+    }
+    checkEndVal() {
+      if (this.endValue > this.max){
+        this.endValue = this.max
+      } else if (this.endValue < this.startValue){
+        this.endValue = this.startValue
+      }
     }
   }
 
@@ -43,5 +83,6 @@ export  interface dataModel{
     endValue?: number,
     step?: number,
     prompt?: boolean,
-    scaleOfValues?: boolean
+    scaleOfValues?: boolean,
+    progressBar?: boolean
   }
