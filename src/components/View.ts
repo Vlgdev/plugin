@@ -60,10 +60,51 @@ export default class View {
                 this.setStandart(model);
             }
             this.setPrompt(model);
+
+            let className = model.target.className;
+            let currentField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
+            let progressField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__progressBar');
+            let intervalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__interval');
+            let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
+            let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
+            let minField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__min');
+            let maxField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__max');
+            let stepField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__step');
+            let scaleOfValues: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__scale');
+            let promptField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__prompt');
+            let verticalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__vertical');
+            
+            currentField.value = model.currentValue + '';
+            progressField.checked = model.progressBar;
+            intervalField.checked = model.interval;
+            startField.value = model.startValue + '';
+            endField.value = model.endValue + '';
+            minField.value = model.min + '';
+            maxField.value = model.max + '';
+            stepField.value = model.step + '';
+            scaleOfValues.checked = model.scaleOfValues;
+            promptField.checked = model.prompt;
+            verticalField.checked = model.vertical;
+
         } else if (subject == 'currentValue' && model.interval !== true) {
             this.setStandart(model);
+            
+            let className = model.target.className;
+            let currentField:HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
+            currentField.value = '' + model.currentValue;
+
         } else if ((subject == 'startValue' || subject == 'endValue') && model.interval === true) {
             this.setInterval(model);
+
+            let className = model.target.className;
+            if (subject == 'startValue'){
+                let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
+                startField.value = model.startValue + '';
+            } else {
+                let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
+                endField.value = model.endValue + '';
+            }
+
         } else if ((subject == 'interval' || subject == 'prompt') && model.interval == true) {
             let fsdInner: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__inner')!;
             fsdInner = this.renderInterval(model, fsdInner);
@@ -72,6 +113,21 @@ export default class View {
             fsd.querySelector('.fsd__inner')?.remove();
             fsd.prepend(fsdInner);
             this.setInterval(model);
+
+            let className = model.target.className;
+            if (subject == 'interval'){
+                let intervalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__interval');
+                let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
+                let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
+
+                intervalField.checked = model.interval;
+                startField.value = model.startValue + '';
+                endField.value = model.endValue + '';
+            } else {
+                let propmtField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__prompt');
+                propmtField.checked = model.prompt;
+            }
+
         } else if ((subject == 'interval' || subject == 'prompt') && model.interval == false) {
             let fsdInner: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__inner')!;
             fsdInner = this.renderStandart(model, fsdInner);
@@ -80,12 +136,29 @@ export default class View {
             fsd.querySelector('.fsd__inner')?.remove();
             fsd.prepend(fsdInner);
             this.setStandart(model);
+
+            let className = model.target.className;
+            if (subject == 'interval'){
+                let intervalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__interval');
+                let currentField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
+
+                intervalField.checked = model.interval;
+                currentField.value = model.startValue + '';
+            } else {
+                let propmtField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__prompt');
+                propmtField.checked = model.prompt;
+            }
+
         } else if (subject == 'scaleOfValues') {
             model.target.querySelector('.fsd__scale')?.remove()
             let fsd: HTMLElement = <HTMLElement>model.target.querySelector('.fsd');
             fsd = this.renderScale(model, fsd);
             model.target.append(fsd);
             this.setScale(model);
+
+            let className = model.target.className;
+            let scaleField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__scale');
+            scaleField.checked = model.scaleOfValues;
         }
 
     }
@@ -283,6 +356,7 @@ export default class View {
 
             s += nextSpan
         }
+        
     }
 
     setInterval(model: Model) {

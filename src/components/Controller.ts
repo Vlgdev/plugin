@@ -36,8 +36,16 @@ export default class Controller {
           return this.model[key]
         },
         set: function (value) {
-          this.model[key] = value
-          this.model.checkData()
+          this.model[key] = value;
+          if (key == 'currentValue'){
+            this.model.checkCurVal();
+          } else if (key == 'startValue'){
+            this.model.checkStartVal();
+          } else if (key == 'endValue'){
+            this.model.checkEndVal();
+          } else if (key == 'min' || key == 'max'){
+            this.model.checkMinMax();
+          }
           this.view.render(this.model, key)
         }
       })
@@ -110,6 +118,10 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.startValue + "";
 
+      let className = model.target.className;
+      let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
+      startField.value = model.startValue + '';
+
     } else if (model.interval === true && slider.classList.contains('fsd__end-wrapper')) {
 
       let startWrap: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper')
@@ -129,6 +141,10 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.endValue + "";
 
+      let className = model.target.className;
+      let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
+      endField.value = model.endValue + '';
+
     } else {
 
 
@@ -140,6 +156,10 @@ export default class Controller {
 
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.currentValue + "";
+
+        let className = model.target.className;
+        let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
+        curField.value = model.currentValue + '';
     }
 
     if (distance < 0) distance = 0;
@@ -288,7 +308,7 @@ export default class Controller {
 
       let startPos: number
       let endPos: number
-      if (model.vertical === true){
+      if (model.vertical === true) {
         startPos = parseFloat(startSlider.style.top);
         endPos = parseFloat(endSlider.style.top);
       } else {
@@ -326,11 +346,11 @@ export default class Controller {
 
       if (pos! == 'start') {
 
-        if (model.prompt === true){
+        if (model.prompt === true) {
           prompt = <HTMLElement>startSlider.querySelector('.fsd__prompt')
           prompt.innerHTML = model.startValue + ''
         }
-        
+
         if (model.vertical === true) {
           startSlider.style.top = distance + '%'
           intervalWidth = endPos - distance;
@@ -345,9 +365,13 @@ export default class Controller {
           interval.style.left = distance + sliderSize / 2 + '%'
         }
 
+        let className = model.target.className;
+        let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
+        startField.value = model.startValue + '';
+
       } else {
 
-        if (model.prompt === true){
+        if (model.prompt === true) {
           prompt = <HTMLElement>endSlider.querySelector('.fsd__prompt')
           prompt.innerHTML = model.endValue + ''
         }
@@ -365,6 +389,10 @@ export default class Controller {
           interval.style.width = intervalWidth + '%'
           interval.style.left = startPos + sliderSize / 2 + '%'
         }
+
+        let className = model.target.className;
+        let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
+        endField.value = model.endValue + '';
 
       }
 
@@ -393,12 +421,12 @@ export default class Controller {
         } else {
           generalPrompt.innerHTML = model.startValue + ' - ' + model.endValue;
         }
-        if (model.vertical === true){
+        if (model.vertical === true) {
           generalPrompt.style.top = parseFloat(start.style.top) + (parseFloat(end.style.top) + sliderSize - parseFloat(start.style.top)) / 2 + '%';
         } else {
           generalPrompt.style.left = parseFloat(start.style.left) + (parseFloat(end.style.left) + sliderSize - parseFloat(start.style.left)) / 2 + '%';
         }
-        
+
 
         if (endDistance - startDistance <= 0) {
           startPrompt.style.visibility = 'hidden';
@@ -440,6 +468,10 @@ export default class Controller {
 
       if (model.prompt === true)
         prompt!.innerHTML = model.currentValue + ''
+
+      let className = model.target.className;
+      let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
+      curField.value = model.currentValue + '';
     }
   }
 

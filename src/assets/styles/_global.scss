@@ -50,6 +50,12 @@
         right: calc(100% + 10px);
         transform: translateY(-50%);
         top: 50%;
+        &-general{
+          white-space: normal;
+          span{
+            display: block;
+          }
+        }
         &::after{
           top: 50%;
           transform: translateY(-50%);
@@ -113,6 +119,10 @@
     color: #fff;
     &-general{
       top: -33px;
+      white-space: nowrap;
+      span{
+        display: inline-block;
+      }
     }
     &::after{
       content: '';

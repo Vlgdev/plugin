@@ -1,0 +1,49 @@
+mixin config(target)
+    .config(data-target=target)
+        .config__title Одиночное значение
+        .config__row
+            - let id = target + '__currentVal'
+            label.config__label(for=id) Текущее значение
+            input.config__input(type="number" name="currentVal" id=id value="23")
+        .config__row
+            - id = target + '__progressBar'
+            input.config__checkbox(type="checkbox" name="progressBar" id=id)
+            label.config__label(for=id) Шкала прогресса
+        .config__title Интервал
+        .config__row
+            - id = target + '__interval'
+            input.config__checkbox(type="checkbox" name="interval" id=id)
+            label.config__label(for=id) Включить интервальное значение?
+        .config__row
+            - id = target + '__start'
+            label.config__label(for=id) Начальное значение
+            input.config__input(type="number", name="startValue" id=id)
+        .config__row
+            - id = target + '__end'
+            label.config__label(for=id) Конечное значение
+            input.config__input(type="number", name="endValue" id=id)
+        .config__title Общие настройки
+        .config__row
+            - id = target + '__min'
+            label.config__label(for=id) Минимальное значение
+            input.config__input(type="number", name="min" id=id)
+        .config__row
+            - id = target + '__max'
+            label.config__label(for=id) Максимальное значение
+            input.config__input(type="number", name="max" id=id)
+        .config__row
+            - id = target + '__step'
+            label.config__label(for=id) Размер шага
+            input.config__input(type="number", name="step" id=id)
+        .config__row
+            - id = target + '__vertical'
+            input.config__checkbox(type="checkbox", name="vertical" id=id)
+            label.config__label(for=id) Вертикальная версия
+        .config__row
+            - id = target + '__scale'
+            input.config__checkbox(type="checkbox", name="scale" id=id)
+            label.config__label(for=id) Шкала значений
+        .config__row
+            - id = target + '__prompt'
+            input.config__checkbox(type="checkbox", name="prompt" id=id)
+            label.config__label(for=id) Подсказка
