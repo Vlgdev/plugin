@@ -36,16 +36,23 @@ export default class Controller {
           return this.model[key]
         },
         set: function (value) {
-          this.model[key] = value;
-          if (key == 'currentValue'){
+          
+          if (key == 'currentValue' || key == 'startValue' || key == 'endValue' || key == 'min' || key == 'max' || key == 'step'){
+            this.model[key] = +value;
+          } else {
+            this.model[key] = value;
+          }
+
+          if (key == 'currentValue') {
             this.model.checkCurVal();
-          } else if (key == 'startValue'){
+          } else if (key == 'startValue') {
             this.model.checkStartVal();
-          } else if (key == 'endValue'){
+          } else if (key == 'endValue') {
             this.model.checkEndVal();
-          } else if (key == 'min' || key == 'max'){
+          } else if (key == 'min' || key == 'max') {
             this.model.checkMinMax();
           }
+
           this.view.render(this.model, key)
         }
       })
@@ -118,7 +125,7 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.startValue + "";
 
-      let className = model.target.className;
+      let className: string = model.target.className;
       let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
       startField.value = model.startValue + '';
 
@@ -141,7 +148,7 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.endValue + "";
 
-      let className = model.target.className;
+      let className: string = model.target.className;
       let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
       endField.value = model.endValue + '';
 
@@ -157,9 +164,9 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.currentValue + "";
 
-        let className = model.target.className;
-        let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
-        curField.value = model.currentValue + '';
+      let className: string = model.target.className;
+      let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
+      curField.value = model.currentValue + '';
     }
 
     if (distance < 0) distance = 0;
@@ -252,7 +259,7 @@ export default class Controller {
       if (model.endValue == model.startValue) {
         generalPrompt.innerHTML = model.startValue + '';
       } else {
-        generalPrompt.innerHTML = model.startValue + ' - ' + model.endValue;
+                generalPrompt.innerHTML = model.startValue + (model.vertical === true ? '<span>-</span>' : ' - ') + model.endValue;
       }
 
       if (endDistance - startDistance <= 0) {
@@ -365,7 +372,7 @@ export default class Controller {
           interval.style.left = distance + sliderSize / 2 + '%'
         }
 
-        let className = model.target.className;
+        let className: string = model.target.className;
         let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
         startField.value = model.startValue + '';
 
@@ -390,7 +397,7 @@ export default class Controller {
           interval.style.left = startPos + sliderSize / 2 + '%'
         }
 
-        let className = model.target.className;
+        let className: string = model.target.className;
         let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
         endField.value = model.endValue + '';
 
@@ -408,18 +415,16 @@ export default class Controller {
         if (model.vertical === true) {
           startDistance = startPrompt.getBoundingClientRect().top + startPrompt.offsetHeight;
           endDistance = endPrompt.getBoundingClientRect().top
-          console.log('vert')
         } else {
           startDistance = startPrompt.getBoundingClientRect().left + startPrompt.offsetWidth;
           endDistance = endPrompt.getBoundingClientRect().left
-          console.log('hor')
         }
 
         let generalPrompt: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__prompt-general');
         if (model.endValue == model.startValue) {
           generalPrompt.innerHTML = model.startValue + '';
         } else {
-          generalPrompt.innerHTML = model.startValue + ' - ' + model.endValue;
+                generalPrompt.innerHTML = model.startValue + (model.vertical === true ? '<span>-</span>' : ' - ') + model.endValue;
         }
         if (model.vertical === true) {
           generalPrompt.style.top = parseFloat(start.style.top) + (parseFloat(end.style.top) + sliderSize - parseFloat(start.style.top)) / 2 + '%';
@@ -469,7 +474,7 @@ export default class Controller {
       if (model.prompt === true)
         prompt!.innerHTML = model.currentValue + ''
 
-      let className = model.target.className;
+      let className: string = model.target.className;
       let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
       curField.value = model.currentValue + '';
     }
@@ -487,7 +492,7 @@ export default class Controller {
       let endSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__end-wrapper')
       let sliderWidth: number = startSlider.offsetWidth / range.offsetWidth * 100
       let interval: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__interval')
-      let right = 100 - sliderWidth
+      let right: number = 100 - sliderWidth
 
       let startPos: number = view.stepsWidth * (model.startValue! - 1) - sliderWidth / 2
       if (startPos < 0) startPos = 0
@@ -518,7 +523,7 @@ export default class Controller {
 
     let scale: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__scale')
     let max: HTMLElement = <HTMLElement>scale.querySelector('.fsd__max')
-    let spans = scale.querySelectorAll('span');
+    let spans: NodeListOf<HTMLSpanElement> = scale.querySelectorAll('span');
     for (let i: number = 1; i < spans.length - 1; i++) {
       let left: number = view.stepsWidth * i - spans[i].offsetWidth / range.offsetWidth * 100 / 2;
       spans[i].style.left = left + '%';
@@ -530,7 +535,7 @@ export default class Controller {
     let distance: number
     while (s < spans.length - 1) {
       nextSpan = 1
-      let cur = s == 0 ? 0 : parseInt(spans[s].style.left)
+      let cur: number = s == 0 ? 0 : parseInt(spans[s].style.left)
       distance = parseInt(spans[s + nextSpan].style.left) - cur
 
       while (distance < spans[s].offsetWidth / range.offsetWidth * 100 + 10) {

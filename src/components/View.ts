@@ -19,7 +19,7 @@ export default class View {
             let fsdInner: HTMLElement;
             let fsdRange: HTMLElement;
 
-            let mn: number = model.min!
+            let mn: number = +model.min!
             this.steps = 0;
 
             while (mn < model.max!) {
@@ -61,7 +61,7 @@ export default class View {
             }
             this.setPrompt(model);
 
-            let className = model.target.className;
+            let className: string = model.target.className;
             let currentField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
             let progressField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__progressBar');
             let intervalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__interval');
@@ -73,7 +73,7 @@ export default class View {
             let scaleOfValues: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__scale');
             let promptField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__prompt');
             let verticalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__vertical');
-            
+
             currentField.value = model.currentValue + '';
             progressField.checked = model.progressBar;
             intervalField.checked = model.interval;
@@ -88,16 +88,16 @@ export default class View {
 
         } else if (subject == 'currentValue' && model.interval !== true) {
             this.setStandart(model);
-            
-            let className = model.target.className;
-            let currentField:HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
+
+            let className: string = model.target.className;
+            let currentField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
             currentField.value = '' + model.currentValue;
 
         } else if ((subject == 'startValue' || subject == 'endValue') && model.interval === true) {
             this.setInterval(model);
 
-            let className = model.target.className;
-            if (subject == 'startValue'){
+            let className: string = model.target.className;
+            if (subject == 'startValue') {
                 let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
                 startField.value = model.startValue + '';
             } else {
@@ -114,8 +114,8 @@ export default class View {
             fsd.prepend(fsdInner);
             this.setInterval(model);
 
-            let className = model.target.className;
-            if (subject == 'interval'){
+            let className: string = model.target.className;
+            if (subject == 'interval') {
                 let intervalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__interval');
                 let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
                 let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
@@ -137,8 +137,8 @@ export default class View {
             fsd.prepend(fsdInner);
             this.setStandart(model);
 
-            let className = model.target.className;
-            if (subject == 'interval'){
+            let className: string = model.target.className;
+            if (subject == 'interval') {
                 let intervalField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__interval');
                 let currentField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
 
@@ -156,24 +156,36 @@ export default class View {
             model.target.append(fsd);
             this.setScale(model);
 
-            let className = model.target.className;
+            let className: string = model.target.className;
             let scaleField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__scale');
             scaleField.checked = model.scaleOfValues;
+        } else if (subject == 'progressBar') {
+            if (model.progressBar === true && model.interval !== true) {
+                let progress: HTMLDivElement = document.createElement('div');
+                progress.classList.add('fsd__progress');
+                let inner: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__inner');
+                let slider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__slider-wrapper');
+                let range: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__range');
+                inner.append(progress);
+                this.setStandart(model);
+            } else {
+                model.target.querySelector('.fsd__progress')?.remove();
+            }
         }
 
     }
 
     renderScale(model: Model, fsd: HTMLElement): HTMLElement {
 
-        let scaleOfValues = document.createElement('div');
+        let scaleOfValues: HTMLElement = document.createElement('div');
         scaleOfValues.classList.add('fsd__scale');
 
-        let min = document.createElement('span');
+        let min: HTMLElement = document.createElement('span');
         min.classList.add('fsd__min');
         min.innerHTML = '' + model.min;
         scaleOfValues.append(min);
 
-        let max = document.createElement('span');
+        let max: HTMLElement = document.createElement('span');
         max.classList.add('fsd__max');
         max.innerHTML = '' + model.max;
         scaleOfValues.append(max);
@@ -195,15 +207,15 @@ export default class View {
 
 
     renderInterval(model: Model, fsdInner: HTMLElement): HTMLElement {
-        let startIntervalWrapper = document.createElement('div');
+        let startIntervalWrapper: HTMLElement = document.createElement('div');
         startIntervalWrapper.classList.add('fsd__start-wrapper', 'fsd__slider-wrapper');
-        let startInterval = document.createElement('div');
+        let startInterval: HTMLElement = document.createElement('div');
         startIntervalWrapper.append(startInterval);
         startInterval.classList.add('fsd__start', 'fsd__slider');
 
-        let endIntervalWrapper = document.createElement('div');
+        let endIntervalWrapper: HTMLElement = document.createElement('div');
         endIntervalWrapper.classList.add('fsd__end-wrapper', 'fsd__slider-wrapper');
-        let endInterval = document.createElement('div');
+        let endInterval: HTMLElement = document.createElement('div');
         endInterval.classList.add('fsd__end', 'fsd__slider');
         endIntervalWrapper.append(endInterval);
 
@@ -223,7 +235,8 @@ export default class View {
             model.target.querySelector('.fsd__interval')?.remove()
             model.target.querySelectorAll('.fsd__slider-wrapper').forEach(elem => {
                 elem.remove()
-            })
+            });
+            model.target.querySelector('.fsd__progress')?.remove();
         }
 
         fsdInner.append(lengthInterval)
@@ -237,9 +250,9 @@ export default class View {
 
 
     renderStandart(model: Model, fsdInner: HTMLElement): HTMLElement {
-        let sliderWrapper = document.createElement('div');
+        let sliderWrapper: HTMLElement = document.createElement('div');
         sliderWrapper.classList.add('fsd__slider-wrapper');
-        let slider = document.createElement('div');
+        let slider: HTMLElement = document.createElement('div');
         slider.classList.add('fsd__slider');
         sliderWrapper.append(slider);
 
@@ -250,17 +263,20 @@ export default class View {
 
         }
 
-        if (model.prompt === true)
-            sliderWrapper = this.renderPropmt(model, sliderWrapper)
-
         if (model.target.querySelector('.fsd__inner')) {
             model.target.querySelector('.fsd__interval')?.remove()
             model.target.querySelectorAll('.fsd__slider-wrapper').forEach(elem => {
                 elem.remove()
             })
+            model.target.querySelectorAll('.fsd__prompt').forEach(elem => {
+                elem.remove();
+            })
             model.target.querySelector('.fsd__progress')?.remove()
             model.target.querySelector('.fsd')?.classList.remove('fsd__interval')
         }
+
+        if (model.prompt === true)
+            sliderWrapper = this.renderPropmt(model, sliderWrapper)
 
         if (model.progressBar === true)
             fsdInner.append(progressBar!)
@@ -270,28 +286,28 @@ export default class View {
     }
 
 
-    renderPropmt(model: Model, sliderWrapper: HTMLDivElement): HTMLDivElement {
-        let prompt: HTMLElement = document.createElement('div')
+    renderPropmt(model: Model, sliderWrapper: HTMLElement): HTMLElement {
+        let prompt: HTMLElement = document.createElement('div');
         prompt.classList.add('fsd__prompt');
 
         sliderWrapper.append(prompt);
 
-        return sliderWrapper
+        return sliderWrapper;
     }
 
     setScale(model: Model) {
 
-        let range: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__range')
-        let scaleOfValues: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__scale')
-        let max: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__max')
+        let range: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__range');
+        let scaleOfValues: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__scale');
+        let max: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__max');
 
         if (model.vertical === true) {
-            this.stepsWidth = range.offsetHeight / this.steps / range.offsetHeight * 100
+            this.stepsWidth = range.offsetHeight / this.steps / range.offsetHeight * 100;
         } else {
-            this.stepsWidth = range.offsetWidth / this.steps / range.offsetWidth * 100
+            this.stepsWidth = range.offsetWidth / this.steps / range.offsetWidth * 100;
         }
 
-        let spans = scaleOfValues.querySelectorAll('span')
+        let spans: NodeListOf<HTMLSpanElement> = scaleOfValues.querySelectorAll('span');
 
         if (model.vertical === true) {
             for (let i: number = 1; i < spans.length - 1; i++) {
@@ -332,7 +348,7 @@ export default class View {
 
             distance = (model.vertical === true ? parseInt(spans[s + nextSpan].style.top) : parseInt(spans[s + nextSpan].style.left)) - cur
 
-            let condition: number
+            let condition: number;
             if (model.vertical === true) {
                 condition = spans[s].offsetHeight / range.offsetHeight * 100 + 10
             } else {
@@ -356,7 +372,7 @@ export default class View {
 
             s += nextSpan
         }
-        
+
     }
 
     setInterval(model: Model) {
@@ -381,7 +397,7 @@ export default class View {
         } else {
             sliderSize = startIntervalWrapper!.offsetWidth / range.offsetWidth * 100
         }
-        let rightEdge = 100 - sliderSize
+        let rightEdge: number = 100 - sliderSize;
 
         let start: number;
         [model.startValue, start] = this.getStartPos(model, model.startValue);
@@ -418,12 +434,30 @@ export default class View {
             if (model.endValue == model.startValue) {
                 generalPrompt!.innerHTML = model.startValue + '';
             } else {
-                generalPrompt!.innerHTML = model.startValue + ' - ' + model.endValue;
+                generalPrompt!.innerHTML = model.startValue + (model.vertical === true ? '<span>-</span>' : ' - ') + model.endValue;
             }
-            if (model.vertical === true){
-                generalPrompt!.style.top = start + (end + sliderSize - end) / 2 + '%';
+            if (model.vertical === true) {
+                generalPrompt!.style.top = parseFloat(startIntervalWrapper.style.top) + (parseFloat(endIntervalWrapper.style.top) + sliderSize - parseFloat(startIntervalWrapper.style.top)) / 2 + '%';
             } else {
-                generalPrompt!.style.left = start + (end + sliderSize - end) / 2 + '%';
+                generalPrompt!.style.left = parseFloat(startIntervalWrapper.style.left) + (parseFloat(endIntervalWrapper.style.left) + sliderSize - parseFloat(startIntervalWrapper.style.left)) / 2 + '%';
+            }
+            let startDistance: number;
+            let endDistance: number;
+            if (model.vertical === true) {
+                startDistance = startPrompt!.getBoundingClientRect().top + startPrompt!.offsetHeight;
+                endDistance = endPrompt!.getBoundingClientRect().top
+            } else {
+                startDistance = startPrompt!.getBoundingClientRect().left + startPrompt!.offsetWidth;
+                endDistance = endPrompt!.getBoundingClientRect().left
+            }
+            if (endDistance - startDistance <= 0) {
+                startPrompt!.style.visibility = 'hidden';
+                endPrompt!.style.visibility = 'hidden';
+                generalPrompt!.style.visibility = 'visible';
+            } else {
+                startPrompt!.style.visibility = 'visible';
+                endPrompt!.style.visibility = 'visible';
+                generalPrompt!.style.visibility = 'hidden';
             }
         }
     }
@@ -477,20 +511,20 @@ export default class View {
             let fsd: HTMLElement = <HTMLElement>model.target.querySelector('.fsd')
             let prompt: HTMLElement = <HTMLElement>fsd.querySelector('.fsd__prompt')
             let max: HTMLElement = <HTMLElement>fsd.querySelector('.fsd__max')
-            let stylePrompt = getComputedStyle(prompt)
+            let stylePrompt: CSSStyleDeclaration = getComputedStyle(prompt)
             fsd.style.paddingLeft = max.offsetWidth + parseInt(stylePrompt.paddingLeft) + parseInt(stylePrompt.paddingRight) + 10 + 'px'
         }
     }
 
     getStartPos(model: Model, value: number): Array<number> {
         for (let i = 0; i <= this.steps; i++) {
-            let num = model.min + i * model.step
+            let num: number = model.min + i * model.step
             if (num == value) {
                 return [num, i * this.stepsWidth]
             }
         }
         for (let i = 0; i < this.steps; i++) {
-            let num = model.min + i * model.step;
+            let num: number = model.min + i * model.step;
             if (value > num && value < num + model.step) {
                 return [num, i * this.stepsWidth];
             }

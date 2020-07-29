@@ -52,9 +52,8 @@
         top: 50%;
         &-general{
           white-space: normal;
-          span{
-            display: block;
-          }
+          display: flex;
+          flex-direction: column;
         }
         &::after{
           top: 50%;
@@ -120,9 +119,6 @@
     &-general{
       top: -33px;
       white-space: nowrap;
-      span{
-        display: inline-block;
-      }
     }
     &::after{
       content: '';

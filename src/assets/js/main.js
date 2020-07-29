@@ -50,6 +50,9 @@ $(function() {
             case 'scale':
                 slider.scaleOfValues = target.checked;
                 break;
+            case 'progressBar':
+                slider.progressBar = target.checked;
+                break;
         }
     });
 
