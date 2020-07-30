@@ -38,34 +38,34 @@ export default class Model {
     checkMinMax() {
       
       if (this.min >= this.max){
-        this.min = this.max - this.step
+        this.min = this.max - this.step;
       }
 
       if (this.max - this.min < this.step){
-        this.step = this.max - this.min
+        this.step = this.max - this.min;
       }
       
     }
 
     checkCurVal() {
       if (this.currentValue < this.min){
-        this.currentValue = this.min
+        this.currentValue = this.min;
       } else if (this.currentValue > this.max){
-        this.currentValue = this.max
+        this.currentValue = this.max;
       }
     }
     checkStartVal() {
       if (this.startValue < this.min){
-        this.startValue = this.min
+        this.startValue = this.min;
       } else if (this.startValue > this.endValue){
-        this.startValue = this.endValue
+        this.startValue = this.endValue;
       }
     }
     checkEndVal() {
       if (this.endValue > this.max){
-        this.endValue = this.max
+        this.endValue = this.max;
       } else if (this.endValue < this.startValue){
-        this.endValue = this.startValue
+        this.endValue = this.startValue;
       }
     }
   }

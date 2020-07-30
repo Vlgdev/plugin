@@ -5,10 +5,6 @@ mixin config(target)
             - let id = target + '__currentVal'
             label.config__label(for=id) Текущее значение
             input.config__input(type="number" name="currentVal" id=id value="23")
-        .config__row
-            - id = target + '__progressBar'
-            input.config__checkbox(type="checkbox" name="progressBar" id=id)
-            label.config__label(for=id) Шкала прогресса
         .config__title Интервал
         .config__row
             - id = target + '__interval'
@@ -43,6 +39,10 @@ mixin config(target)
             - id = target + '__scale'
             input.config__checkbox(type="checkbox", name="scale" id=id)
             label.config__label(for=id) Шкала значений
+        .config__row
+            - id = target + '__progressBar'
+            input.config__checkbox(type="checkbox" name="progressBar" id=id)
+            label.config__label(for=id) Шкала прогресса
         .config__row
             - id = target + '__prompt'
             input.config__checkbox(type="checkbox", name="prompt" id=id)

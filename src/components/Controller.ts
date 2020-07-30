@@ -18,26 +18,26 @@ export default class Controller {
       event?.preventDefault();
     })
     window.addEventListener("resize", () => {
-      this.fsdResize(model, view)
+      this.fsdResize(model, view);
     })
 
     for (let key in model) {
-      if (key === 'target') continue
+      if (key === 'target') continue;
 
       Object.defineProperty(model.target, key, {
         get: function () {
 
           if (key === 'currentValue') {
-            if (this.model.interval === true) return null
+            if (this.model.interval === true) return null;
           } else if (key === 'startValue' || key === 'endValue') {
-            if (this.model.interval !== true) return null
+            if (this.model.interval !== true) return null;
           }
 
-          return this.model[key]
+          return this.model[key];
         },
         set: function (value) {
-          
-          if (key == 'currentValue' || key == 'startValue' || key == 'endValue' || key == 'min' || key == 'max' || key == 'step'){
+
+          if (key == 'currentValue' || key == 'startValue' || key == 'endValue' || key == 'min' || key == 'max' || key == 'step') {
             this.model[key] = +value;
           } else {
             this.model[key] = value;
@@ -53,7 +53,7 @@ export default class Controller {
             this.model.checkMinMax();
           }
 
-          this.view.render(this.model, key)
+          this.view.render(this.model, key);
         }
       })
 
@@ -61,14 +61,14 @@ export default class Controller {
 
   }
 
-  fsdOn(model: Model, view: View, event: MouseEvent) {
+  private fsdOn(model: Model, view: View, event: MouseEvent) {
 
-    let target: HTMLElement = <HTMLElement>event.target
+    let target: HTMLElement = <HTMLElement>event.target;
     if (!target.closest('.fsd__slider')) return;
 
     let shift: number = 0;
     if (model.vertical === true) {
-      shift = event.clientY - target.getBoundingClientRect().top
+      shift = event.clientY - target.getBoundingClientRect().top;
     } else {
       shift = event.clientX - target.getBoundingClientRect().left;
     }
@@ -80,26 +80,25 @@ export default class Controller {
 
   }
 
-  fsdMove(model: Model, view: View, shift: number, slider: HTMLElement, event: MouseEvent) {
+  private fsdMove(model: Model, view: View, shift: number, slider: HTMLElement, event: MouseEvent) {
 
-    let range: HTMLElement = <HTMLElement>(model.target.querySelector(".fsd__range"))
-    let sliderSize: number
+    let range: HTMLElement = <HTMLElement>(model.target.querySelector(".fsd__range"));
+    let sliderSize: number;
     if (model.vertical === true) {
-      sliderSize = (slider.offsetHeight / range.offsetHeight) * 100
+      sliderSize = (slider.offsetHeight / range.offsetHeight) * 100;
     } else {
-      sliderSize = (slider.offsetWidth / range.offsetWidth) * 100
+      sliderSize = (slider.offsetWidth / range.offsetWidth) * 100;
     }
 
-    let interval: HTMLElement;
-    let widthInterval: number;
-    let leftInterval: number;
+    let progressWidth: number;
+    let progressLeft: number;
     let progressBar: HTMLElement;
 
-    let distance: number
+    let distance: number;
     if (model.vertical === true) {
-      distance = ((event.clientY - shift - range.getBoundingClientRect().top) / range.offsetHeight) * 100
+      distance = ((event.clientY - shift - range.getBoundingClientRect().top) / range.offsetHeight) * 100;
     } else {
-      distance = ((event.clientX - shift - range.getBoundingClientRect().left) / range.offsetWidth) * 100
+      distance = ((event.clientX - shift - range.getBoundingClientRect().left) / range.offsetWidth) * 100;
     }
 
     let maxPos: number;
@@ -117,10 +116,10 @@ export default class Controller {
 
       if (area > maxPos) area = maxPos;
 
-      distance = area - sliderSize / 2
+      distance = area - sliderSize / 2;
 
-      model.startValue = model.min + i * model.step
-      model.checkStartVal()
+      model.startValue = model.min + i * model.step;
+      model.checkStartVal();
 
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.startValue + "";
@@ -131,19 +130,19 @@ export default class Controller {
 
     } else if (model.interval === true && slider.classList.contains('fsd__end-wrapper')) {
 
-      let startWrap: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper')
+      let startWrap: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper');
       if (model.vertical === true)
         maxPos = parseFloat(startWrap.style.top) + sliderSize / 2;
       else
         maxPos = parseFloat(startWrap.style.left) + sliderSize / 2;
 
-      let { area, i } = model.target.controller.getPos(model, view, distance)
+      let { area, i } = model.target.controller.getPos(model, view, distance);
 
-      if (area < maxPos) area = maxPos
+      if (area < maxPos) area = maxPos;
 
-      distance = area - sliderSize / 2
-      model.endValue = model.min + i * model.step
-      model.checkEndVal()
+      distance = area - sliderSize / 2;
+      model.endValue = model.min + i * model.step;
+      model.checkEndVal();
 
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.endValue + "";
@@ -155,10 +154,10 @@ export default class Controller {
     } else {
 
 
-      let { area, i } = model.target.controller.getPos(model, view, distance)
+      let { area, i } = model.target.controller.getPos(model, view, distance);
 
-      distance = area - sliderSize / 2
-      model.currentValue = model.min + i * model.step!
+      distance = area - sliderSize / 2;
+      model.currentValue = model.min + i * model.step!;
       model.checkCurVal();
 
       if (model.prompt === true)
@@ -175,30 +174,36 @@ export default class Controller {
 
     if (model.interval === true) {
 
-      interval = <HTMLElement>model.target.querySelector('.fsd__interval')
+      if (model.progressBar === true) {
+        progressBar = <HTMLElement>model.target.querySelector('.fsd__progress');
+      }
 
       if (slider.classList.contains('fsd__start-wrapper')) {
 
-        let end: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__end-wrapper')
+        let end: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__end-wrapper');
 
-        if (model.vertical === true) {
-          widthInterval = parseFloat(end.style.top) - distance
-          leftInterval = distance + sliderSize / 2
-        } else {
-          widthInterval = parseFloat(end.style.left) - distance
-          leftInterval = distance + sliderSize / 2
+        if (model.progressBar === true) {
+          if (model.vertical === true) {
+            progressWidth = parseFloat(end.style.top) - distance;
+            progressLeft = distance + sliderSize / 2;
+          } else {
+            progressWidth = parseFloat(end.style.left) - distance;
+            progressLeft = distance + sliderSize / 2;
+          }
         }
 
       } else {
 
-        let start: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper')
+        let start: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper');
 
-        if (model.vertical === true) {
-          widthInterval = distance - parseFloat(start.style.top)
-          leftInterval = parseFloat(start.style.top) + sliderSize / 2
-        } else {
-          widthInterval = distance - parseFloat(start.style.left)
-          leftInterval = parseFloat(start.style.left) + sliderSize / 2
+        if (model.progressBar === true) {
+          if (model.vertical === true) {
+            progressWidth = distance - parseFloat(start.style.top);
+            progressLeft = parseFloat(start.style.top) + sliderSize / 2;
+          } else {
+            progressWidth = distance - parseFloat(start.style.left);
+            progressLeft = parseFloat(start.style.left) + sliderSize / 2;
+          }
         }
 
       }
@@ -222,15 +227,15 @@ export default class Controller {
       }
     }
 
-    if (model.interval) {
-      if (widthInterval! < 0) widthInterval = 0
+    if (model.interval && model.progressBar === true) {
+      if (progressWidth! < 0) progressWidth = 0;
 
       if (model.vertical === true) {
-        interval!.style.height = widthInterval! + '%'
-        interval!.style.top = leftInterval! + '%'
+        progressBar!.style.height = progressWidth! + '%';
+        progressBar!.style.top = progressLeft! + '%';
       } else {
-        interval!.style.width = widthInterval! + '%'
-        interval!.style.left = leftInterval! + '%'
+        progressBar!.style.width = progressWidth! + '%';
+        progressBar!.style.left = progressLeft! + '%';
       }
 
     }
@@ -242,16 +247,16 @@ export default class Controller {
       let startPrompt: HTMLElement = <HTMLElement>start.querySelector('.fsd__prompt');
       let endPrompt: HTMLElement = <HTMLElement>end.querySelector('.fsd__prompt');
 
-      let startDistance: number
-      let endDistance: number
+      let startDistance: number;
+      let endDistance: number;
       let generalPrompt: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__prompt-general');
       if (model.vertical === true) {
         startDistance = startPrompt.getBoundingClientRect().top + startPrompt.offsetHeight;
-        endDistance = endPrompt.getBoundingClientRect().top
+        endDistance = endPrompt.getBoundingClientRect().top;
         generalPrompt.style.top = parseFloat(start.style.top) + (parseFloat(end.style.top) + sliderSize - parseFloat(start.style.top)) / 2 + '%';
       } else {
         startDistance = startPrompt.getBoundingClientRect().left + startPrompt.offsetWidth;
-        endDistance = endPrompt.getBoundingClientRect().left
+        endDistance = endPrompt.getBoundingClientRect().left;
         generalPrompt.style.left = parseFloat(start.style.left) + (parseFloat(end.style.left) + sliderSize - parseFloat(start.style.left)) / 2 + '%';
       }
 
@@ -259,7 +264,7 @@ export default class Controller {
       if (model.endValue == model.startValue) {
         generalPrompt.innerHTML = model.startValue + '';
       } else {
-                generalPrompt.innerHTML = model.startValue + (model.vertical === true ? '<span>-</span>' : ' - ') + model.endValue;
+        generalPrompt.innerHTML = model.startValue + (model.vertical === true ? '<span>-</span>' : ' - ') + model.endValue;
       }
 
       if (endDistance - startDistance <= 0) {
@@ -275,7 +280,7 @@ export default class Controller {
 
   }
 
-  fsdOff(model: Model) {
+  private fsdOff(model: Model) {
 
     let off = model.target.controller.boundOff;
     let move = model.target.controller.boundMove;
@@ -284,37 +289,37 @@ export default class Controller {
 
   }
 
-  fsdInteractive(model: Model, view: View, event: MouseEvent) {
+  private fsdInteractive(model: Model, view: View, event: MouseEvent) {
 
-    let target: HTMLElement = <HTMLElement>event.target
+    let target: HTMLElement = <HTMLElement>event.target;
 
     if (!(target.closest('.fsd__scale') || target.closest('.fsd__range') || target.closest('.fsd__interval') || target.closest('.fsd__progress'))) return;
 
     let range: HTMLElement = <HTMLElement>(model.target.querySelector(".fsd__range"));
 
     let slider: HTMLElement = <HTMLElement>(model.target.querySelector(".fsd__slider-wrapper"));
-    let sliderSize: number
+    let sliderSize: number;
     if (model.vertical === true) {
-      sliderSize = (slider.offsetHeight / range.offsetHeight) * 100
+      sliderSize = (slider.offsetHeight / range.offsetHeight) * 100;
     } else {
-      sliderSize = (slider.offsetWidth / range.offsetWidth) * 100
+      sliderSize = (slider.offsetWidth / range.offsetWidth) * 100;
     }
 
     let rightEdge: number = 100 - sliderSize;
-    let distance: number
+    let distance: number;
     if (model.vertical === true) {
-      distance = ((event.clientY - range.getBoundingClientRect().top) / range.offsetHeight) * 100
+      distance = ((event.clientY - range.getBoundingClientRect().top) / range.offsetHeight) * 100;
     } else {
-      distance = ((event.clientX - range.getBoundingClientRect().left) / range.offsetWidth) * 100
+      distance = ((event.clientX - range.getBoundingClientRect().left) / range.offsetWidth) * 100;
     }
 
     if (model.interval == true) {
 
-      let startSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper')
-      let endSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__end-wrapper')
+      let startSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper');
+      let endSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__end-wrapper');
 
-      let startPos: number
-      let endPos: number
+      let startPos: number;
+      let endPos: number;
       if (model.vertical === true) {
         startPos = parseFloat(startSlider.style.top);
         endPos = parseFloat(endSlider.style.top);
@@ -323,53 +328,60 @@ export default class Controller {
         endPos = parseFloat(endSlider.style.left);
       }
 
-      if (startPos < 0) startPos = 0
-      if (startPos > rightEdge) startPos = rightEdge
-      if (endPos < 0) endPos = 0
-      if (endPos > rightEdge) endPos = rightEdge
+      if (startPos < 0) startPos = 0;
+      if (startPos > rightEdge) startPos = rightEdge;
+      if (endPos < 0) endPos = 0;
+      if (endPos > rightEdge) endPos = rightEdge;
 
       let pos: string
 
-      if (distance <= endPos - (endPos - startPos) / 2) pos = 'start'
-      else if (distance >= startPos + (endPos - startPos) / 2) pos = 'end'
+      if (distance <= endPos - (endPos - startPos) / 2) pos = 'start';
+      else if (distance >= startPos + (endPos - startPos) / 2) pos = 'end';
 
-      let { area, i } = this.getPos(model, view, distance)
+      let { area, i } = this.getPos(model, view, distance);
 
-      distance = area - sliderSize / 2
+      distance = area - sliderSize / 2;
       if (pos! == 'start') {
         model.startValue = model.min + i * model.step;
         model.checkStartVal();
       } else {
-        model.endValue = model.min + i * model.step
+        model.endValue = model.min + i * model.step;
         model.checkEndVal();
       }
 
       if (distance < 0) distance = 0;
       if (distance > rightEdge) distance = rightEdge;
 
-      let prompt: HTMLElement
-      let interval: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__interval')
-      let intervalWidth: number;
+      let prompt: HTMLElement;
+      let progressBar: HTMLElement;
+      let progressWidth: number;
+      if (model.progressBar === true) {
+        progressBar = <HTMLElement>model.target.querySelector('.fsd__progress');
+      }
 
       if (pos! == 'start') {
 
         if (model.prompt === true) {
-          prompt = <HTMLElement>startSlider.querySelector('.fsd__prompt')
-          prompt.innerHTML = model.startValue + ''
+          prompt = <HTMLElement>startSlider.querySelector('.fsd__prompt');
+          prompt.innerHTML = model.startValue + '';
         }
 
         if (model.vertical === true) {
-          startSlider.style.top = distance + '%'
-          intervalWidth = endPos - distance;
-          if (intervalWidth < 0) intervalWidth = 0
-          interval.style.height = intervalWidth + '%'
-          interval.style.top = distance + sliderSize / 2 + '%'
+          startSlider.style.top = distance + '%';
+          if (model.progressBar === true) {
+            progressWidth = endPos - distance;
+            if (progressWidth < 0) progressWidth = 0;
+            progressBar!.style.height = progressWidth + '%';
+            progressBar!.style.top = distance + sliderSize / 2 + '%';
+          }
         } else {
-          startSlider.style.left = distance + '%'
-          intervalWidth = endPos - distance;
-          if (intervalWidth < 0) intervalWidth = 0
-          interval.style.width = intervalWidth + '%'
-          interval.style.left = distance + sliderSize / 2 + '%'
+          startSlider.style.left = distance + '%';
+          if (model.progressBar === true) {
+            progressWidth = endPos - distance;
+            if (progressWidth < 0) progressWidth = 0;
+            progressBar!.style.width = progressWidth + '%';
+            progressBar!.style.left = distance + sliderSize / 2 + '%';
+          }
         }
 
         let className: string = model.target.className;
@@ -379,22 +391,26 @@ export default class Controller {
       } else {
 
         if (model.prompt === true) {
-          prompt = <HTMLElement>endSlider.querySelector('.fsd__prompt')
-          prompt.innerHTML = model.endValue + ''
+          prompt = <HTMLElement>endSlider.querySelector('.fsd__prompt');
+          prompt.innerHTML = model.endValue + '';
         }
 
         if (model.vertical === true) {
-          endSlider.style.top = distance + '%'
-          intervalWidth = distance - startPos;
-          if (intervalWidth < 0) intervalWidth = 0;
-          interval.style.height = intervalWidth + '%'
-          interval.style.top = startPos + sliderSize / 2 + '%'
+          endSlider.style.top = distance + '%';
+          if (model.progressBar === true) {
+            progressWidth = distance - startPos;
+            if (progressWidth < 0) progressWidth = 0;
+            progressBar!.style.height = progressWidth + '%';
+            progressBar!.style.top = startPos + sliderSize / 2 + '%';
+          }
         } else {
-          endSlider.style.left = distance + '%'
-          intervalWidth = distance - startPos;
-          if (intervalWidth < 0) intervalWidth = 0;
-          interval.style.width = intervalWidth + '%'
-          interval.style.left = startPos + sliderSize / 2 + '%'
+          endSlider.style.left = distance + '%';
+          if (model.progressBar === true) {
+            progressWidth = distance - startPos;
+            if (progressWidth < 0) progressWidth = 0;
+            progressBar!.style.width = progressWidth + '%';
+            progressBar!.style.left = startPos + sliderSize / 2 + '%';
+          }
         }
 
         let className: string = model.target.className;
@@ -410,21 +426,21 @@ export default class Controller {
         let startPrompt: HTMLElement = <HTMLElement>start.querySelector('.fsd__prompt');
         let endPrompt: HTMLElement = <HTMLElement>end.querySelector('.fsd__prompt');
 
-        let startDistance: number
-        let endDistance: number
+        let startDistance: number;
+        let endDistance: number;
         if (model.vertical === true) {
           startDistance = startPrompt.getBoundingClientRect().top + startPrompt.offsetHeight;
-          endDistance = endPrompt.getBoundingClientRect().top
+          endDistance = endPrompt.getBoundingClientRect().top;
         } else {
           startDistance = startPrompt.getBoundingClientRect().left + startPrompt.offsetWidth;
-          endDistance = endPrompt.getBoundingClientRect().left
+          endDistance = endPrompt.getBoundingClientRect().left;
         }
 
         let generalPrompt: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__prompt-general');
         if (model.endValue == model.startValue) {
           generalPrompt.innerHTML = model.startValue + '';
         } else {
-                generalPrompt.innerHTML = model.startValue + (model.vertical === true ? '<span>-</span>' : ' - ') + model.endValue;
+          generalPrompt.innerHTML = model.startValue + (model.vertical === true ? '<span>-</span>' : ' - ') + model.endValue;
         }
         if (model.vertical === true) {
           generalPrompt.style.top = parseFloat(start.style.top) + (parseFloat(end.style.top) + sliderSize - parseFloat(start.style.top)) / 2 + '%';
@@ -446,18 +462,18 @@ export default class Controller {
 
     } else {
 
-      let { area, i } = this.getPos(model, view, distance)
+      let { area, i } = this.getPos(model, view, distance);
 
       distance = area - sliderSize / 2;
-      model.currentValue = model.min + i * model.step!
+      model.currentValue = model.min + i * model.step!;
       model.checkCurVal();
 
       if (distance < 0) distance = 0;
       if (distance > rightEdge) distance = rightEdge;
 
-      let prompt: HTMLElement
+      let prompt: HTMLElement;
       if (model.prompt === true)
-        prompt = <HTMLElement>slider.querySelector('.fsd__prompt')
+        prompt = <HTMLElement>slider.querySelector('.fsd__prompt');
 
       let progressBar: HTMLElement;
       if (model.progressBar === true)
@@ -472,7 +488,7 @@ export default class Controller {
       }
 
       if (model.prompt === true)
-        prompt!.innerHTML = model.currentValue + ''
+        prompt!.innerHTML = model.currentValue + '';
 
       let className: string = model.target.className;
       let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
@@ -480,7 +496,7 @@ export default class Controller {
     }
   }
 
-  fsdResize(model: Model, view: View) {
+  private fsdResize(model: Model, view: View) {
     if (model.vertical === true) return;
 
     let range: HTMLElement = <HTMLElement>(
@@ -488,24 +504,27 @@ export default class Controller {
     );
 
     if (model.interval === true) {
-      let startSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper')
-      let endSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__end-wrapper')
-      let sliderWidth: number = startSlider.offsetWidth / range.offsetWidth * 100
-      let interval: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__interval')
-      let right: number = 100 - sliderWidth
+      let startSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper');
+      let endSlider: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__end-wrapper');
+      let sliderWidth: number = startSlider.offsetWidth / range.offsetWidth * 100;
+      let progressBar: HTMLElement;
+      if (model.progressBar === true) {
+        progressBar = <HTMLElement>model.target.querySelector('.fsd__progress');
+      }
+      let right: number = 100 - sliderWidth;
 
-      let startPos: number = view.stepsWidth * (model.startValue! - 1) - sliderWidth / 2
-      if (startPos < 0) startPos = 0
-      if (startPos > right) startPos = right
+      let startPos: number = view.stepsWidth * (model.startValue! - 1) - sliderWidth / 2;
+      if (startPos < 0) startPos = 0;
+      if (startPos > right) startPos = right;
 
-      let endPos: number = view.stepsWidth * (model.endValue! - 1) - sliderWidth / 2
-      if (endPos < 0) endPos = 0
-      if (endPos > right) endPos = right
+      let endPos: number = view.stepsWidth * (model.endValue! - 1) - sliderWidth / 2;
+      if (endPos < 0) endPos = 0;
+      if (endPos > right) endPos = right;
 
-      startSlider.style.left = startPos + '%'
-      endSlider.style.left = endPos + '%'
-      interval.style.width = endPos - startPos + '%'
-      interval.style.left = startPos + sliderWidth / 2 + '%'
+      startSlider.style.left = startPos + '%';
+      endSlider.style.left = endPos + '%';
+      progressBar!.style.width = endPos - startPos + '%';
+      progressBar!.style.left = startPos + sliderWidth / 2 + '%';
 
     } else {
       let slider: HTMLElement = <HTMLElement>(
@@ -513,66 +532,73 @@ export default class Controller {
       );
 
       let sliderWidth: number = (slider.offsetWidth / range.offsetWidth) * 100;
-      let curPos: number =
-        view.stepsWidth * (model.currentValue! - 1) - sliderWidth / 2;
+      let curPos: number = view.stepsWidth * (model.currentValue! - 1) - sliderWidth / 2;
       if (curPos < 0) curPos = 0;
       let right: number = 100 - sliderWidth;
       if (curPos > right) curPos = right;
       slider.style.left = curPos + "%";
     }
 
-    let scale: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__scale')
-    let max: HTMLElement = <HTMLElement>scale.querySelector('.fsd__max')
-    let spans: NodeListOf<HTMLSpanElement> = scale.querySelectorAll('span');
-    for (let i: number = 1; i < spans.length - 1; i++) {
-      let left: number = view.stepsWidth * i - spans[i].offsetWidth / range.offsetWidth * 100 / 2;
-      spans[i].style.left = left + '%';
-    }
+    let scale: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__scale');
+    let max: HTMLElement = <HTMLElement>scale.querySelector('.fsd__max');
+    let min: HTMLElement = <HTMLElement>scale.querySelector('.fsd__min');
+
+    min.style.left = 0 + '%';
     max.style.left = 100 - max.offsetWidth / range.offsetWidth * 100 + '%';
 
-    let s: number = 0
-    let nextSpan: number
-    let distance: number
-    while (s < spans.length - 1) {
-      nextSpan = 1
-      let cur: number = s == 0 ? 0 : parseInt(spans[s].style.left)
-      distance = parseInt(spans[s + nextSpan].style.left) - cur
+    let spans: NodeListOf<HTMLSpanElement> = scale.querySelectorAll('span');
 
-      while (distance < spans[s].offsetWidth / range.offsetWidth * 100 + 10) {
-        if (spans[s + nextSpan].classList.contains('fsd__max')) {
-          spans[s].classList.add('hidden')
-          break
+    for (let i = 0; i < spans.length - 1; i++) {
+      let distance: number = parseFloat(spans[i + 1].style.left) - (parseFloat(spans[i].style.left) + spans[i].offsetWidth / range.offsetWidth * 100);
+
+      if (distance < 7){
+
+        scale.querySelectorAll('span').forEach(elem => {
+          if (elem.classList.contains('fsd__min') || elem.classList.contains('fsd__max')) return;
+    
+          elem.remove();
+        })
+    
+        if (model.scaleOfValues === true) {
+          let curSpan: HTMLElement = min;
+          for (let i: number = 1; i < view.steps; i++) {
+            let span: HTMLElement = document.createElement('span');
+            span.innerHTML = model.min + i * model.step! + '';
+            max.before(span);
+            let distance: number = view.stepsWidth * i - span.offsetWidth / range.offsetWidth * 100 / 2;
+            let condition: number = distance - (parseFloat(curSpan.style.left) + curSpan.offsetWidth / range.offsetWidth * 100);
+            let maxDistance: number = parseFloat(max.style.left) - (distance + span.offsetWidth / range.offsetWidth * 100);
+            if (condition < 7 || maxDistance < 7) {
+              span.remove()
+            } else {
+              span.style.left = distance + '%';
+              curSpan = span;
+            }
+          }
         }
-
-        spans[s + nextSpan].classList.add('hidden')
-        nextSpan++
-
-        distance = parseInt(spans[s + nextSpan].style.left) - cur
+        
+        break;
       }
-
-      if (spans[s + nextSpan].classList.contains('hidden'))
-        spans[s + nextSpan].classList.remove('hidden')
-
-      s += nextSpan
-
     }
+
+    
 
   }
 
-  getPos(model: Model, view: View, distance: number): { area: number, i: number } {
+  private getPos(model: Model, view: View, distance: number): { area: number, i: number } {
 
-    let area: number = 0
-    let i: number
+    let area: number = 0;
+    let i: number;
 
     for (i = 0; i <= view.steps; i++) {
-      area = view.stepsWidth * i
+      area = view.stepsWidth * i;
       if (
         ((distance <= area && distance >= area - view.stepsWidth / 2) ||
           (distance >= area && distance <= area + view.stepsWidth / 2)) &&
         !(distance > view.steps * view.stepsWidth) &&
         !(distance < 0)
       ) {
-        return { area, i }
+        return { area, i };
       }
     }
 
@@ -580,13 +606,13 @@ export default class Controller {
       return {
         area: view.steps * view.stepsWidth,
         i: view.steps
-      }
+      };
     }
 
     return {
       area: 0,
       i: 0
-    }
+    };
 
   }
 
