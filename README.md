@@ -17,19 +17,19 @@
     <tbody>
     <tr>
         <td>step</td>
-        <td>integer | float</td>
+        <td>integer, float</td>
         <td>1</td>
         <td>Определяет размер шага</td>
     </tr>
     <tr>
         <td>min</td>
-        <td>integer | float</td>
+        <td>integer, float</td>
         <td>1</td>
         <td>Определяет минимальное значение</td>
     </tr>
     <tr>
         <td>max</td>
-        <td>integer | float</td>
+        <td>integer, float</td>
         <td>10</td>
         <td>Определяет максимальное значение</td>
     </tr>
@@ -47,19 +47,19 @@
     </tr>
     <tr>
         <td>currentValue</td>
-        <td>integer | float</td>
+        <td>integer, float</td>
         <td>Равно минимальному значению</td>
         <td>Устанавливает текущее значение при одиночном значении</td>
     </tr>
     <tr>
         <td>startValue</td>
-        <td>integer | float</td>
+        <td>integer, float</td>
         <td>Равно минимальному значению</td>
         <td>Устанавливает начальное значение при интервальном значении</td>
     </tr>
     <tr>
         <td>endValue</td>
-        <td>integer | float</td>
+        <td>integer, float</td>
         <td>Равно максимальному значению</td>
         <td>Устанавливает конечное значение при интервальном значении</td>
     </tr>
