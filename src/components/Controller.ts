@@ -112,7 +112,7 @@ export default class Controller {
       else
         maxPos = parseFloat(endWrap.style.left) + sliderSize / 2;
 
-      let { area, i } = model.target.controller.getPos(model, view, distance);
+      let { area, i } = model.target.controller.getPos(view, distance);
 
       if (area > maxPos) area = maxPos;
 
@@ -136,7 +136,7 @@ export default class Controller {
       else
         maxPos = parseFloat(startWrap.style.left) + sliderSize / 2;
 
-      let { area, i } = model.target.controller.getPos(model, view, distance);
+      let { area, i } = model.target.controller.getPos(view, distance);
 
       if (area < maxPos) area = maxPos;
 
@@ -154,7 +154,7 @@ export default class Controller {
     } else {
 
 
-      let { area, i } = model.target.controller.getPos(model, view, distance);
+      let { area, i } = model.target.controller.getPos(view, distance);
 
       distance = area - sliderSize / 2;
       model.currentValue = model.min + i * model.step!;
@@ -338,7 +338,7 @@ export default class Controller {
       if (distance <= endPos - (endPos - startPos) / 2) pos = 'start';
       else if (distance >= startPos + (endPos - startPos) / 2) pos = 'end';
 
-      let { area, i } = this.getPos(model, view, distance);
+      let { area, i } = this.getPos(view, distance);
 
       distance = area - sliderSize / 2;
       if (pos! == 'start') {
@@ -462,7 +462,7 @@ export default class Controller {
 
     } else {
 
-      let { area, i } = this.getPos(model, view, distance);
+      let { area, i } = this.getPos(view, distance);
 
       distance = area - sliderSize / 2;
       model.currentValue = model.min + i * model.step!;
@@ -585,7 +585,7 @@ export default class Controller {
 
   }
 
-  private getPos(model: Model, view: View, distance: number): { area: number, i: number } {
+  private getPos(view: View, distance: number): { area: number, i: number } {
 
     let area: number = 0;
     let i: number;

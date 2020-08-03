@@ -213,8 +213,8 @@ export default class View {
 
         let generalPrompt: HTMLElement;
         if (model.prompt === true) {
-            startIntervalWrapper = this.renderPropmt(model, startIntervalWrapper);
-            endIntervalWrapper = this.renderPropmt(model, endIntervalWrapper);
+            startIntervalWrapper = this.renderPropmt(startIntervalWrapper);
+            endIntervalWrapper = this.renderPropmt(endIntervalWrapper);
             generalPrompt = document.createElement('div');
             generalPrompt.classList.add('fsd__prompt', 'fsd__prompt-general');
             generalPrompt.style.visibility = 'hidden';
@@ -276,7 +276,7 @@ export default class View {
         }
 
         if (model.prompt === true)
-            sliderWrapper = this.renderPropmt(model, sliderWrapper);
+            sliderWrapper = this.renderPropmt(sliderWrapper);
 
         if (model.progressBar === true)
             fsdInner.append(progressBar!);
@@ -286,7 +286,7 @@ export default class View {
     }
 
 
-    private renderPropmt(model: Model, sliderWrapper: HTMLElement): HTMLElement {
+    private renderPropmt(sliderWrapper: HTMLElement): HTMLElement {
         let prompt: HTMLElement = document.createElement('div');
         prompt.classList.add('fsd__prompt');
 
