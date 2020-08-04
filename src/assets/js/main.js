@@ -11,14 +11,14 @@ $(function() {
     $('.main-slider').rangeFSD({
         currentValue: 6
     })
-
+    let slider = document.querySelector('.slider');
+    slider.controller = 0;
     document.addEventListener('change', () => {
         if (!event.target.closest('.config')) return;
 
         let target = event.target;
         let config = target.closest('.config');
         let slider = document.querySelector('.' + config.dataset.target);
-        console.log(config.dataset.target)
         switch (target.name){
             case 'currentVal':
                 slider.currentValue = target.value;

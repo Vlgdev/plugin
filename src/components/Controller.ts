@@ -21,44 +21,6 @@ export default class Controller {
       this.fsdResize(model, view);
     })
 
-    for (let key in model) {
-      if (key === 'target') continue;
-
-      Object.defineProperty(model.target, key, {
-        get: function () {
-
-          if (key === 'currentValue') {
-            if (this.model.interval === true) return null;
-          } else if (key === 'startValue' || key === 'endValue') {
-            if (this.model.interval !== true) return null;
-          }
-
-          return this.model[key];
-        },
-        set: function (value) {
-
-          if (key == 'currentValue' || key == 'startValue' || key == 'endValue' || key == 'min' || key == 'max' || key == 'step') {
-            this.model[key] = +value;
-          } else {
-            this.model[key] = value;
-          }
-
-          if (key == 'currentValue') {
-            this.model.checkCurVal();
-          } else if (key == 'startValue') {
-            this.model.checkStartVal();
-          } else if (key == 'endValue') {
-            this.model.checkEndVal();
-          } else if (key == 'min' || key == 'max') {
-            this.model.checkMinMax();
-          }
-
-          this.view.render(this.model, key);
-        }
-      })
-
-    }
-
   }
 
   private fsdOn(model: Model, view: View, event: MouseEvent) {
@@ -73,8 +35,8 @@ export default class Controller {
       shift = event.clientX - target.getBoundingClientRect().left;
     }
 
-    this.boundMove = this.fsdMove.bind(null, model, view, shift, <HTMLElement>target.closest('.fsd__slider-wrapper'));
-    this.boundOff = this.fsdOff.bind(null, model);
+    this.boundMove = this.fsdMove.bind(this, model, view, shift, <HTMLElement>target.closest('.fsd__slider-wrapper'));
+    this.boundOff = this.fsdOff.bind(this);
     document.addEventListener("mousemove", this.boundMove);
     document.addEventListener("mouseup", this.boundOff);
 
@@ -112,7 +74,7 @@ export default class Controller {
       else
         maxPos = parseFloat(endWrap.style.left) + sliderSize / 2;
 
-      let { area, i } = model.target.controller.getPos(view, distance);
+      let { area, i } = this.getPos(view, distance);
 
       if (area > maxPos) area = maxPos;
 
@@ -136,7 +98,7 @@ export default class Controller {
       else
         maxPos = parseFloat(startWrap.style.left) + sliderSize / 2;
 
-      let { area, i } = model.target.controller.getPos(view, distance);
+      let { area, i } = this.getPos(view, distance);
 
       if (area < maxPos) area = maxPos;
 
@@ -154,7 +116,7 @@ export default class Controller {
     } else {
 
 
-      let { area, i } = model.target.controller.getPos(view, distance);
+      let { area, i } = this.getPos(view, distance);
 
       distance = area - sliderSize / 2;
       model.currentValue = model.min + i * model.step!;
@@ -280,13 +242,9 @@ export default class Controller {
 
   }
 
-  private fsdOff(model: Model) {
-
-    let off = model.target.controller.boundOff;
-    let move = model.target.controller.boundMove;
-    document.removeEventListener("mousemove", move);
-    document.removeEventListener("mouseup", off);
-
+  private fsdOff() {
+    document.removeEventListener("mousemove", this.boundMove);
+    document.removeEventListener("mouseup", this.boundOff);
   }
 
   private fsdInteractive(model: Model, view: View, event: MouseEvent) {
@@ -614,6 +572,74 @@ export default class Controller {
       i: 0
     };
 
+  }
+
+  fsdProtection(model: Model, view: View) {
+    Object.defineProperty(model.target, 'model', {
+      get: function() {
+        return undefined;
+      },
+      set: function(){
+        console.log('Свойство model не может быть изменено');
+        return false;
+      }
+    });
+    Object.defineProperty(model.target, 'view', {
+      get: function() {
+        return undefined;
+      },
+      set: function(){
+        console.log('Свойство view не может быть изменено');
+        return false;
+      }
+    });
+    Object.defineProperty(model.target, 'controller', {
+      get: function() {
+        return undefined;
+      },
+      set: function(){
+        console.log('Свойство controller не может быть изменено');
+        return false;
+      }
+    });
+
+    for (let key in model) {
+      if (key === 'target') continue;
+
+      Object.defineProperty(model.target, key, {
+        get: function () {
+
+          if (key === 'currentValue') {
+            if (model.interval === true) return null;
+          } else if (key === 'startValue' || key === 'endValue') {
+            if (model.interval !== true) return null;
+          }
+
+          return model[key];
+        },
+        set: function (value) {
+
+          if (key == 'currentValue' || key == 'startValue' || key == 'endValue' || key == 'min' || key == 'max' || key == 'step') {
+            model[key] = +value;
+          } else {
+            model[key] = value;
+          }
+
+          if (key == 'currentValue') {
+            model.checkCurVal();
+          } else if (key == 'startValue') {
+            model.checkStartVal();
+          } else if (key == 'endValue') {
+            model.checkEndVal();
+          } else if (key == 'min' || key == 'max') {
+            model.checkMinMax();
+          }
+
+          view.render(model, key);
+        }
+      })
+
+    }
   }
 
 }
