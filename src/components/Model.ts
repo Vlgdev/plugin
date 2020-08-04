@@ -14,9 +14,11 @@ export default class Model {
   public prompt: boolean;
   public scaleOfValues: boolean;
   public progressBar: boolean;
+  public init?: Function;
+  public onMove?: Function;
 
     constructor(params: dataModel) {
-      let {target, min = 1, max = 10, currentValue = min, vertical = false, interval = false, step = 1, prompt = true, scaleOfValues = false, startValue = min, endValue = max, progressBar = true} = params!;
+      let {target, min = 1, max = 10, currentValue = min, vertical = false, interval = false, step = 1, prompt = true, scaleOfValues = false, startValue = min, endValue = max, progressBar = true, init, onMove} = params!;
       this.target = target!;
       this.min = min;
       this.max = max;
@@ -33,6 +35,12 @@ export default class Model {
       this.checkCurVal();
       this.checkStartVal();
       this.checkEndVal();
+      if (init){
+        this.init = init;
+      }
+      if (onMove){
+        this.onMove = onMove;
+      }
     }
 
     checkMinMax() {
@@ -84,5 +92,7 @@ export  interface dataModel{
     step?: number,
     prompt?: boolean,
     scaleOfValues?: boolean,
-    progressBar?: boolean
+    progressBar?: boolean,
+    init?: Function,
+    onMove?: Function
   }

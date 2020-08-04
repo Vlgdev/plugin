@@ -21,6 +21,12 @@ export default class Controller {
       this.fsdResize(model, view);
     })
 
+    this.fsdSettings(model, view);
+
+    if (model.init){
+      model.init(model.target);
+    }
+
   }
 
   private fsdOn(model: Model, view: View, event: MouseEvent) {
@@ -86,10 +92,6 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.startValue + "";
 
-      let className: string = model.target.className;
-      let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
-      startField.value = model.startValue + '';
-
     } else if (model.interval === true && slider.classList.contains('fsd__end-wrapper')) {
 
       let startWrap: HTMLElement = <HTMLElement>model.target.querySelector('.fsd__start-wrapper');
@@ -109,10 +111,6 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.endValue + "";
 
-      let className: string = model.target.className;
-      let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
-      endField.value = model.endValue + '';
-
     } else {
 
 
@@ -125,9 +123,10 @@ export default class Controller {
       if (model.prompt === true)
         slider.querySelector(".fsd__prompt")!.innerHTML = model.currentValue + "";
 
-      let className: string = model.target.className;
-      let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
-      curField.value = model.currentValue + '';
+    }
+
+    if (model.onMove){
+      model.onMove(slider, model.target);
     }
 
     if (distance < 0) distance = 0;
@@ -300,9 +299,11 @@ export default class Controller {
 
       distance = area - sliderSize / 2;
       if (pos! == 'start') {
+        slider = startSlider;
         model.startValue = model.min + i * model.step;
         model.checkStartVal();
       } else {
+        slider = endSlider;
         model.endValue = model.min + i * model.step;
         model.checkEndVal();
       }
@@ -342,10 +343,6 @@ export default class Controller {
           }
         }
 
-        let className: string = model.target.className;
-        let startField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__start');
-        startField.value = model.startValue + '';
-
       } else {
 
         if (model.prompt === true) {
@@ -370,10 +367,6 @@ export default class Controller {
             progressBar!.style.left = startPos + sliderSize / 2 + '%';
           }
         }
-
-        let className: string = model.target.className;
-        let endField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__end');
-        endField.value = model.endValue + '';
 
       }
 
@@ -447,10 +440,10 @@ export default class Controller {
 
       if (model.prompt === true)
         prompt!.innerHTML = model.currentValue + '';
+    }
 
-      let className: string = model.target.className;
-      let curField: HTMLInputElement = <HTMLInputElement>document.getElementById(className + '__currentVal');
-      curField.value = model.currentValue + '';
+    if (model.onMove){
+      model.onMove(slider, model.target)
     }
   }
 
@@ -574,7 +567,48 @@ export default class Controller {
 
   }
 
-  fsdProtection(model: Model, view: View) {
+  fsdSettings(model: Model, view: View){
+
+    for (let key in model) {
+      if (key === 'target' || key === 'init') continue;
+
+      Object.defineProperty(model.target, key, {
+        get: function () {
+
+          if (key === 'currentValue') {
+            if (model.interval === true) return null;
+          } else if (key === 'startValue' || key === 'endValue') {
+            if (model.interval !== true) return null;
+          }
+          
+          return model[key];
+        },
+        set: function (value) {
+
+          if (key == 'currentValue' || key == 'startValue' || key == 'endValue' || key == 'min' || key == 'max' || key == 'step') {
+            model[key] = +value;
+          } else {
+            model[key] = value;
+          }
+
+          if (key == 'currentValue') {
+            model.checkCurVal();
+          } else if (key == 'startValue') {
+            model.checkStartVal();
+          } else if (key == 'endValue') {
+            model.checkEndVal();
+          } else if (key == 'min' || key == 'max') {
+            model.checkMinMax();
+          }
+
+          view.render(model, key);
+        }
+      })
+
+    }
+  }
+
+  fsdProtection(model: Model) {
     Object.defineProperty(model.target, 'model', {
       get: function() {
         return undefined;
@@ -602,44 +636,6 @@ export default class Controller {
         return false;
       }
     });
-
-    for (let key in model) {
-      if (key === 'target') continue;
-
-      Object.defineProperty(model.target, key, {
-        get: function () {
-
-          if (key === 'currentValue') {
-            if (model.interval === true) return null;
-          } else if (key === 'startValue' || key === 'endValue') {
-            if (model.interval !== true) return null;
-          }
-
-          return model[key];
-        },
-        set: function (value) {
-
-          if (key == 'currentValue' || key == 'startValue' || key == 'endValue' || key == 'min' || key == 'max' || key == 'step') {
-            model[key] = +value;
-          } else {
-            model[key] = value;
-          }
-
-          if (key == 'currentValue') {
-            model.checkCurVal();
-          } else if (key == 'startValue') {
-            model.checkStartVal();
-          } else if (key == 'endValue') {
-            model.checkEndVal();
-          } else if (key == 'min' || key == 'max') {
-            model.checkMinMax();
-          }
-
-          view.render(model, key);
-        }
-      })
-
-    }
   }
 
 }

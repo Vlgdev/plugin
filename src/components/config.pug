@@ -4,7 +4,7 @@ mixin config(target)
         .config__row
             - let id = target + '__currentVal'
             label.config__label(for=id) Текущее значение
-            input.config__input(type="number" name="currentVal" id=id value="23")
+            input.config__input(type="number" name="currentVal" id=id)
         .config__title Интервал
         .config__row
             - id = target + '__interval'
