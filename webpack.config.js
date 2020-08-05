@@ -157,7 +157,8 @@ module.exports = {
             '@data': path.resolve(__dirname, 'src/data'),
             '@images': path.resolve(__dirname, 'src/assets/images'),
             '@js': path.resolve(__dirname, 'src/assets/js'),
-            '@comp': path.resolve(__dirname, 'src/components')
+            '@comp': path.resolve(__dirname, 'src/components'),
+            '@tests': path.resolve(__dirname, 'src/tests')
         }
     },
     optimization: optimization(),
