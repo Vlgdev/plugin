@@ -317,13 +317,13 @@ export default class View {
         let rightEdge: number = 100 - sliderSize;
 
         let start: number;
-        [model.startValue, start] = this.getStartPos(model, model.startValue);
+        start = this.getStartPos(model, model.startValue);
         start -= sliderSize / 2;
         if (start < 0) start = 0;
         if (start > rightEdge) start = rightEdge;
 
         let end: number;
-        [model.endValue, end] = this.getStartPos(model, model.endValue);
+        end = this.getStartPos(model, model.endValue);
         end -= sliderSize / 2;
 
         if (end < 0) end = 0;
@@ -402,7 +402,7 @@ export default class View {
         }
 
         let distance: number;
-        [model.currentValue, distance] = this.getStartPos(model, model.currentValue);
+        distance = this.getStartPos(model, model.currentValue);
         distance -= sliderSize / 2;
 
         let rightEdge: number = 100 - sliderSize;
@@ -435,21 +435,15 @@ export default class View {
         }
     }
 
-    private getStartPos(model: Model, value: number): Array<number> {
+    private getStartPos(model: Model, value: number): number {
         for (let i = 0; i <= this.steps; i++) {
             let num: number = model.min + i * model.step;
             if (num == value) {
-                return [num, i * this.stepsWidth];
-            }
-        }
-        for (let i = 0; i < this.steps; i++) {
-            let num: number = model.min + i * model.step;
-            if (value > num && value < num + model.step) {
-                return [num, i * this.stepsWidth];
+                return i * this.stepsWidth;
             }
         }
 
-        return [model.min, 0];
+        return 0;
     }
 
 }

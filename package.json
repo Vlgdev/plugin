@@ -40,6 +40,7 @@
     "sass-loader": "^8.0.2",
     "source-map": "^0.7.3",
     "terser-webpack-plugin": "^2.3.5",
+    "ts-jest": "^26.1.4",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"

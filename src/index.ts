@@ -18,8 +18,3 @@ import "@js/main";
   };
 })($);
 
-export interface rangeItem extends HTMLElement {
-  model: Model,
-  view: View,
-  controller: Controller
-}
