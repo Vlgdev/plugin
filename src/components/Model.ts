@@ -97,7 +97,10 @@ export default class Model {
 
   checkValue(value: number) {
     for (let i: number = this.min; i < this.max; i += this.step) {
-      if (value > i && value < i + this.step) {
+      let nextValue: number = i + this.step;
+      if (nextValue > this.max)
+        nextValue = this.max
+      if (value > i && value < nextValue) {
         return i;
       }
     }

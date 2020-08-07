@@ -11,16 +11,7 @@ $(function () {
             setConfig(target);
         },
         onMove: function(slider, target){
-            if (slider.classList.contains('fsd__start-wrapper')){
-                let startField = document.getElementById(target.className + '__start');
-                startField.value = target.startValue;
-            } else if (slider.classList.contains('fsd__end-wrapper')){
-                let endField = document.getElementById(target.className + '__end');
-                endField.value = target.endValue;
-            } else {
-                let currentField = document.getElementById(target.className + '__currentVal');
-                currentField.value = target.currentValue;
-            }
+            onMove(slider, target);
         }
     });
     $('.main-slider').rangeFSD({
@@ -29,18 +20,54 @@ $(function () {
             setConfig(target);
         },
         onMove: function(slider, target){
-            if (slider.classList.contains('fsd__start-wrapper')){
-                let startField = document.getElementById(target.className + '__start');
-                startField.value = target.startValue;
-            } else if (slider.classList.contains('fsd__end-wrapper')){
-                let endField = document.getElementById(target.className + '__end');
-                endField.value = target.endValue;
-            } else {
-                let currentField = document.getElementById(target.className + '__currentVal');
-                currentField.value = target.currentValue;
-            }
+            onMove(slider, target);
         }
     });
+
+    $('.third-slider').rangeFSD({
+        interval: true,
+        vertical: true,
+        min: 500,
+        max: 5500,
+        step: 500,
+        startValue: 1500,
+        endValue: 4500,
+        progressBar: false,
+        init: function(target) {
+            setConfig(target);
+        },
+        onMove: function(slider, target) {
+            onMove(slider, target);
+        }
+    });
+
+    $('.uncommon-slider').rangeFSD({
+        min: 32,
+        max: 398,
+        step: 33,
+        currentValue: 231,
+        prompt: false,
+        scaleOfValues: true,
+        init: function(target) {
+            setConfig(target);
+        },
+        onMove: function(slider, target) {
+            onMove(slider, target);
+        }
+    })
+
+    function onMove(slider, target){
+        if (slider.classList.contains('fsd__start-wrapper')){
+            let startField = document.getElementById(target.className + '__start');
+            startField.value = target.startValue;
+        } else if (slider.classList.contains('fsd__end-wrapper')){
+            let endField = document.getElementById(target.className + '__end');
+            endField.value = target.endValue;
+        } else {
+            let currentField = document.getElementById(target.className + '__currentVal');
+            currentField.value = target.currentValue;
+        }
+    }
 
     function setConfig(slider) {
         let className = slider.className;

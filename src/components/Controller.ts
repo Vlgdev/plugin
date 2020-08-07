@@ -14,8 +14,8 @@ export default class Controller {
     model.target.addEventListener('click', () => {
       this.fsdInteractive(model, view, <MouseEvent>event);
     })
-    model.target.addEventListener("selectstart", () => {
-      return false;
+    model.target.addEventListener("selectstart", (event) => {
+      event.preventDefault();
     })
     window.addEventListener("resize", () => {
       this.fsdResize(model, view);
@@ -573,15 +573,15 @@ export default class Controller {
       if (key == 'target' || key == 'init' || key == 'onMove') continue;
 
       Object.defineProperty(model.target, key, {
-        get: function () {
+        get: function (): any {
 
           if (key === 'currentValue') {
             if (model.interval === true) return null;
           } else if (key === 'startValue' || key === 'endValue') {
             if (model.interval !== true) return null;
           }
-          
-          return model[key];
+          if (typeof key == 'string')
+           return model[key];
         },
         set: function (value) {
 
@@ -614,7 +614,7 @@ export default class Controller {
         return null;
       },
       set: function(){
-        console.log('Свойство model не может быть изменено');
+        console.error('Свойство model не может быть изменено');
         return false;
       }
     });
@@ -623,7 +623,7 @@ export default class Controller {
         return null;
       },
       set: function(){
-        console.log('Свойство view не может быть изменено');
+        console.error('Свойство view не может быть изменено');
         return false;
       }
     });
@@ -632,7 +632,7 @@ export default class Controller {
         return null;
       },
       set: function(){
-        console.log('Свойство controller не может быть изменено');
+        console.error('Свойство controller не может быть изменено');
         return false;
       }
     });
