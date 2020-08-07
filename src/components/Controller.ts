@@ -15,7 +15,7 @@ export default class Controller {
       this.fsdInteractive(model, view, <MouseEvent>event);
     })
     model.target.addEventListener("selectstart", () => {
-      event?.preventDefault();
+      return false;
     })
     window.addEventListener("resize", () => {
       this.fsdResize(model, view);
@@ -570,7 +570,7 @@ export default class Controller {
   fsdSettings(model: Model, view: View){
 
     for (let key in model) {
-      if (key === 'target' || key === 'init') continue;
+      if (key == 'target' || key == 'init' || key == 'onMove') continue;
 
       Object.defineProperty(model.target, key, {
         get: function () {
@@ -611,7 +611,7 @@ export default class Controller {
   fsdProtection(model: Model) {
     Object.defineProperty(model.target, 'model', {
       get: function() {
-        return undefined;
+        return null;
       },
       set: function(){
         console.log('Свойство model не может быть изменено');
@@ -620,7 +620,7 @@ export default class Controller {
     });
     Object.defineProperty(model.target, 'view', {
       get: function() {
-        return undefined;
+        return null;
       },
       set: function(){
         console.log('Свойство view не может быть изменено');
@@ -629,7 +629,7 @@ export default class Controller {
     });
     Object.defineProperty(model.target, 'controller', {
       get: function() {
-        return undefined;
+        return null;
       },
       set: function(){
         console.log('Свойство controller не может быть изменено');

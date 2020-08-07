@@ -1,6 +1,9 @@
 import Model from '../components/Model';
-import Controller from '../components/Controller';
 import View from '../components/View';
+import $ from 'jquery';
+import Controller from '../components/Controller';
+
+//------------------- MODEL ------------------
 
 describe('Test Model', () => {
 
@@ -13,6 +16,7 @@ describe('Test Model', () => {
     describe('Target', () => {
 
         test('HTMLElement should be here', () => {
+            expect(model.target).toBeTruthy()
             expect(model.target).toBeInstanceOf(HTMLElement)
         })
 
@@ -422,4 +426,264 @@ describe('Test Model', () => {
 
     });
 
-})
+});
+
+
+//------------------ END MODEL -----------------------------------
+// ----------------- VIEW ---------------------
+
+
+describe('Test View', () => {
+
+    let target: HTMLElement = document.createElement('div');
+    target.classList.add('slider')
+
+    let model = new Model({
+        target
+    });
+    let view = new View(model);
+
+    describe('Steps', () => {
+        test('must be 9', () => {
+            expect(view.steps).toEqual(9);
+        });
+        test('must be 4', () => {
+            model = new Model({
+                target,
+                max: 5
+            });
+            view = new View(model);
+            expect(view.steps).toEqual(4);
+        });
+        test('must be 345', () => {
+            model = new Model({
+                target,
+                max: 350,
+                min: 5
+            });
+            view = new View(model);
+            expect(view.steps).toEqual(345);
+        })
+    });
+
+    describe('Render', () => {
+        test('default', () => {
+            model = new Model({target});
+            view = new View(model);
+            let fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
+            let inner: HTMLElement = <HTMLElement>target.querySelector('.fsd__inner');
+            let range: HTMLElement = <HTMLElement>target.querySelector('.fsd__range');
+            let sliderWrappers: NodeListOf<Element> = target.querySelectorAll('.fsd__slider-wrapper');
+            let slider: HTMLElement = <HTMLElement>target.querySelector('.fsd__slider');
+            let prompt: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
+            let progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
+            let scale: HTMLElement = <HTMLElement>target.querySelector('.fsd__scale');
+            let min: HTMLElement = <HTMLElement>target.querySelector('.fsd__min');
+            let max: HTMLElement = <HTMLElement>target.querySelector('.fsd__max');
+            expect(fsd).toBeTruthy()
+            expect(inner).toBeTruthy()
+            expect(range).toBeTruthy()
+            expect(sliderWrappers.length).toEqual(1)
+            expect(sliderWrappers[0]).toBeTruthy()
+            expect(slider).toBeTruthy()
+            expect(prompt.length).toEqual(1)
+            expect(prompt[0]).toBeTruthy()
+            expect(progressBar).toBeTruthy()
+            expect(scale).toBeTruthy()
+            expect(min).toBeTruthy()
+            expect(min.innerHTML).toEqual(model.min + '')
+            expect(max).toBeTruthy()
+            expect(max.innerHTML).toEqual(model.max + '')
+        });
+        test('interval: true', () => {
+            model = new Model({
+                target,
+                interval: true
+            });
+            view = new View(model);
+            let fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
+            let sliderWrappers: NodeListOf<Element> = target.querySelectorAll('.fsd__slider-wrapper');
+            let prompts: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
+            let progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
+            expect(fsd.classList.contains('fsd-interval')).toBeTruthy();
+            expect(sliderWrappers.length).toEqual(2);
+            expect(sliderWrappers[0].classList.contains('fsd__start-wrapper')).toBeTruthy();
+            expect(sliderWrappers[1].classList.contains('fsd__end-wrapper')).toBeTruthy();
+            expect(prompts.length).toEqual(3);
+            expect(prompts[2].classList.contains('fsd__prompt-general')).toBeTruthy();
+            expect(progressBar).toBeTruthy();
+        });
+        test('prompt: false', () => {
+            model = new Model({
+                target,
+                interval: true,
+                prompt: false
+            });
+            view = new View(model);
+            let prompts: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
+            expect(prompts.length).toEqual(0);
+        });
+        test('vertical: true', () => {
+            model = new Model({
+                target,
+                vertical: true
+            });
+            view = new View(model);
+            let fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
+            expect(fsd.classList.contains('fsd-vertical')).toBeTruthy();
+        });
+        test('scale of values: true', () => {
+            model = new Model({
+                target,
+                scaleOfValues: true
+            });
+            view = new View(model);
+            let spans: NodeListOf<HTMLSpanElement> = target.querySelectorAll('.fsd__scale > span');
+            expect(spans.length > 2).toBeTruthy()
+        });
+        test('progress bar: false', () => {
+            model = new Model({
+                target,
+                progressBar: false
+            });
+            view = new View(model);
+            let progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
+            expect(progressBar).toBeFalsy();
+        });
+    });
+
+});
+
+//------------------- END VIEW ---------------------
+//------------------- CONTROLLER ---------------------------
+
+describe('Test controller', () => {
+    let target: any = document.createElement('div');
+    target.classList.add('slider');
+    target.model = new Model({
+        target,
+    });
+    target.view = new View(target.model);
+    target.controller = new Controller(target.model, target.view);
+    target.controller.fsdProtection(target.model);
+
+    describe('Getters', () => {
+        test('model, view and controller must return falsy value', () => {
+            expect(target.model).toBeFalsy()
+            expect(target.view).toBeFalsy()
+            expect(target.controller).toBeFalsy()
+        });
+        test('target must return falsy value', () => {
+            expect(target.target).toBeFalsy();
+        });
+        test('min must return 1', () => {
+            expect(target.min).toEqual(1);
+        });
+        test('max must return 10', () => {
+            expect(target.max).toEqual(10);
+        });
+        test('current value must return 1', () => {
+            expect(target.currentValue).toEqual(1);
+        });
+        test('if interval equal true, current value must return null', () => {
+            target.interval = true;
+            expect(target.currentValue).toBeNull();
+        });
+        test('vertical must return false', () => {
+            target.interval = false;
+            expect(target.vertical).toEqual(false);
+        });
+        test('interval must return false', () => {
+            expect(target.interval).toEqual(false);
+        });
+        test('start value must return 1', () => {
+            target.interval = true;
+            expect(target.startValue).toEqual(1);
+        });
+        test('end value must return 10', () => {
+            expect(target.endValue).toEqual(10);
+        });
+        test('if interval equal false, start and end value must return null', () => {
+            target.interval = false;
+            expect(target.startValue).toBeNull();
+            expect(target.endValue).toBeNull();
+        });
+        test('step must return 1', () => {
+            expect(target.step).toEqual(1);
+        });
+        test('prompt must return true', () => {
+            expect(target.prompt).toEqual(true);
+        });
+        test('scale of values must return false', () => {
+            expect(target.scaleOfValues).toEqual(false);
+        });
+        test('progress bar must return true', () => {
+            expect(target.progressBar).toEqual(true);
+        });
+        test('checkMinMax must return falsy', () => {
+            expect(target.checkMinMax).toBeFalsy();
+        });
+    });
+    describe('Setters', () => {
+        test('model must return error on console.log', () => {
+            target.model = 23;
+            expect(target.model).toBeFalsy()
+        });
+        test('view must return error on console.log', () => {
+            target.view = 23;
+            expect(target.view).toBeFalsy()
+        });
+        test('controller must return error on console.log', () => {
+            target.controller = 23;
+            expect(target.controller).toBeFalsy()
+        });
+        test('target will not change but the property will be written', () => {
+            target.target = 23;
+            expect(target.target).toEqual(23);
+        });
+        test('min must be 5', () => {
+            target.min = 5;
+            expect(target.min).toEqual(5);
+        });
+        test('max must be 15', () => {
+            target.max = 15;
+            expect(target.max).toEqual(15);
+        });
+        test('current value must be 7', () => {
+            target.currentValue = 7;
+            expect(target.currentValue).toEqual(7);
+        });
+        test('vertical must be true', () => {
+            target.vertical = true;
+            expect(target.vertical).toEqual(true);
+        });
+        test('interval must be true', () => {
+            target.interval = true;
+            expect(target.interval).toEqual(true);
+        });
+        test('start value must be 9', () => {
+            target.startValue = 9;
+            expect(target.startValue).toEqual(9);
+        });
+        test('end value must be 11', () => {
+            target.endValue = 11;
+            expect(target.endValue).toEqual(11);
+        });
+        test('step must be 2', () => {
+            target.step = 2;
+            expect(target.step).toEqual(2);
+        });
+        test('prompt must be false', () => {
+            target.prompt = false;
+            expect(target.prompt).toEqual(false);
+        });
+        test('scale of values must be true', () => {
+            target.scaleOfValues = true;
+            expect(target.scaleOfValues).toEqual(true);
+        });
+        test('progress bar must be false', () => {
+            target.progressBar = false;
+            expect(target.progressBar).toEqual(false);
+        });
+    });
+});
