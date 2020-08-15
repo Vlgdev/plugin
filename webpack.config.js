@@ -1,6 +1,8 @@
-const path = require('path');
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-undef */
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -13,19 +15,19 @@ const isProd = !isDev;
 const cssLoaders = (extra) => {
     let loaders = [
         {
-        loader: MiniCssExtractPlugin.loader,
-        options: {
-            hmr: isDev,
-            reloadAll: isDev
-        }
-        }, 
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+                hmr: isDev,
+                reloadAll: isDev
+            }
+        },
         'css-loader',
         {
             loader: 'postcss-loader',
             options: {
                 plugins: [
                     autoprefixer({
-                        overrideBrowserslist:['ie >= 8', 'last 4 version']
+                        overrideBrowserslist: ['ie >= 8', 'last 4 version']
                     })
                 ],
                 sourceMap: true
@@ -33,10 +35,10 @@ const cssLoaders = (extra) => {
         }
     ]
 
-    if (extra){
+    if (extra) {
         loaders.push(extra);
     }
-    
+
     return loaders;
 }
 
@@ -47,7 +49,7 @@ const optimization = () => {
         }
     }
 
-    if (isProd){
+    if (isProd) {
         opt.minimizer = [
             new TerserPlugin(),
             new OptimizeCssAssetsPlugin()
@@ -68,7 +70,7 @@ const jsLoader = (preset) => {
         }
     }
 
-    if (preset){
+    if (preset) {
         loader.options.presets.push(preset);
     }
 
@@ -79,7 +81,7 @@ module.exports = {
     entry: {
         'main': ['@babel/polyfill', '@src/index.ts'],
     },
-    module:{
+    module: {
         rules: [
             {
                 test: /\.js$/,

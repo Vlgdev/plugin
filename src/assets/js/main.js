@@ -1,3 +1,6 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable fsd/no-function-declaration-in-event-listener */
+/* eslint-disable fsd/jq-use-js-prefix-in-selector */
 import $ from 'jquery';
 
 $(function () {
@@ -99,7 +102,7 @@ $(function () {
     document.addEventListener('change', () => {
         if (!event.target.closest('.config')) return;
 
-        let target = event.target;
+        const target = event.target;
         let config = target.closest('.config');
         let slider = document.querySelector('.' + config.dataset.target);
         switch (target.name) {
@@ -129,9 +132,9 @@ $(function () {
                 break;
             case 'interval':
                 slider.interval = target.checked;
-                let startField = document.getElementById(slider.className + '__start');
-                let endField = document.getElementById(slider.className + '__end');
-                let currentField = document.getElementById(slider.className + '__currentVal');
+                const startField = document.getElementById(slider.className + '__start');
+                const endField = document.getElementById(slider.className + '__end');
+                const currentField = document.getElementById(slider.className + '__currentVal');
                 startField.value = slider.startValue;
                 endField.value = slider.endValue;
                 currentField.value = slider.currentValue;

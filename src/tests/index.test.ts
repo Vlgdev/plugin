@@ -1,13 +1,13 @@
 import Model from '../components/Model';
 import View from '../components/View';
-import $ from 'jquery';
 import Controller from '../components/Controller';
+
 
 //------------------- MODEL ------------------
 
 describe('Test Model', () => {
 
-    let target: HTMLElement = document.createElement('div');
+    const target: HTMLElement = document.createElement('div');
     target.classList.add('slider');
     let model = new Model({
         target: target,
@@ -435,7 +435,7 @@ describe('Test Model', () => {
 
 describe('Test View', () => {
 
-    let target: HTMLElement = document.createElement('div');
+    const target: HTMLElement = document.createElement('div');
     target.classList.add('slider')
 
     let model = new Model({
@@ -470,16 +470,16 @@ describe('Test View', () => {
         test('default', () => {
             model = new Model({target});
             view = new View(model);
-            let fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
-            let inner: HTMLElement = <HTMLElement>target.querySelector('.fsd__inner');
-            let range: HTMLElement = <HTMLElement>target.querySelector('.fsd__range');
-            let sliderWrappers: NodeListOf<Element> = target.querySelectorAll('.fsd__slider-wrapper');
-            let slider: HTMLElement = <HTMLElement>target.querySelector('.fsd__slider');
-            let prompt: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
-            let progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
-            let scale: HTMLElement = <HTMLElement>target.querySelector('.fsd__scale');
-            let min: HTMLElement = <HTMLElement>target.querySelector('.fsd__min');
-            let max: HTMLElement = <HTMLElement>target.querySelector('.fsd__max');
+            const fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
+            const inner: HTMLElement = <HTMLElement>target.querySelector('.fsd__inner');
+            const range: HTMLElement = <HTMLElement>target.querySelector('.fsd__range');
+            const sliderWrappers: NodeListOf<Element> = target.querySelectorAll('.fsd__slider-wrapper');
+            const slider: HTMLElement = <HTMLElement>target.querySelector('.fsd__slider');
+            const prompt: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
+            const progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
+            const scale: HTMLElement = <HTMLElement>target.querySelector('.fsd__scale');
+            const min: HTMLElement = <HTMLElement>target.querySelector('.fsd__min');
+            const max: HTMLElement = <HTMLElement>target.querySelector('.fsd__max');
             expect(fsd).toBeTruthy()
             expect(inner).toBeTruthy()
             expect(range).toBeTruthy()
@@ -501,10 +501,10 @@ describe('Test View', () => {
                 interval: true
             });
             view = new View(model);
-            let fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
-            let sliderWrappers: NodeListOf<Element> = target.querySelectorAll('.fsd__slider-wrapper');
-            let prompts: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
-            let progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
+            const fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
+            const sliderWrappers: NodeListOf<Element> = target.querySelectorAll('.fsd__slider-wrapper');
+            const prompts: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
+            const progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
             expect(fsd.classList.contains('fsd-interval')).toBeTruthy();
             expect(sliderWrappers.length).toEqual(2);
             expect(sliderWrappers[0].classList.contains('fsd__start-wrapper')).toBeTruthy();
@@ -520,7 +520,7 @@ describe('Test View', () => {
                 prompt: false
             });
             view = new View(model);
-            let prompts: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
+            const prompts: NodeListOf<Element> = target.querySelectorAll('.fsd__prompt');
             expect(prompts.length).toEqual(0);
         });
         test('vertical: true', () => {
@@ -529,7 +529,7 @@ describe('Test View', () => {
                 vertical: true
             });
             view = new View(model);
-            let fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
+            const fsd: HTMLElement = <HTMLElement>target.querySelector('.fsd');
             expect(fsd.classList.contains('fsd-vertical')).toBeTruthy();
         });
         test('scale of values: true', () => {
@@ -538,7 +538,7 @@ describe('Test View', () => {
                 scaleOfValues: true
             });
             view = new View(model);
-            let spans: NodeListOf<HTMLSpanElement> = target.querySelectorAll('.fsd__scale > span');
+            const spans: NodeListOf<HTMLSpanElement> = target.querySelectorAll('.fsd__scale > span');
             expect(spans.length > 2).toBeTruthy()
         });
         test('progress bar: false', () => {
@@ -547,7 +547,7 @@ describe('Test View', () => {
                 progressBar: false
             });
             view = new View(model);
-            let progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
+            const progressBar: HTMLElement = <HTMLElement>target.querySelector('.fsd__progress');
             expect(progressBar).toBeFalsy();
         });
     });
@@ -558,7 +558,8 @@ describe('Test View', () => {
 //------------------- CONTROLLER ---------------------------
 
 describe('Test controller', () => {
-    let target: any = document.createElement('div');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const target: any = document.createElement('div');
     target.classList.add('slider');
     target.model = new Model({
         target,
