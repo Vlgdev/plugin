@@ -1,5 +1,5 @@
 <h1>FSD Range Slider</h1>
-<a href="https://vig-dev-fsd.github.io/plugin/">Демо</a>
+<a href="https://vlgdev.github.io/plugin/">Демо</a>
 <p>После скачивания произвести операцию npm i. Команда тестирования: npm test</p>
 
 <h2>Использование</h2>
