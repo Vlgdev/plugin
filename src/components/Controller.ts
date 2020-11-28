@@ -91,11 +91,14 @@ export default class Controller {
 
   private fsdInit(model: Model, view: View): void {
     // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
-    model.target.addEventListener("mousedown", () => {
+    model.target.addEventListener("mousedown", (event) => {
       this.fsdOn(model, view, event as MouseEvent) 
     })
+    model.target.addEventListener("touchstart", (event) => {
+      this.fsdOn(model, view, event as TouchEvent) 
+    })
     // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
-    model.target.addEventListener('click', () => {
+    model.target.addEventListener('click', (event) => {
       this.fsdInteractive(model, view, event as MouseEvent) 
     })
     // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
@@ -114,22 +117,28 @@ export default class Controller {
     }
   }
 
-  private fsdOn(model: Model, view: View, event: MouseEvent) {
+  private fsdOn(model: Model, view: View, event: MouseEvent | TouchEvent) {
 
     const target: HTMLElement = event.target as HTMLElement 
     if (!target.closest('.fsd__slider')) return 
-
-    let shift = 0 
+    console.log(event);
+    
+    let shift = 0
+    const coordY = event.clientY ? event.clientY : event.touches[0].clientY
+    const coordX = event.clientX ? event.clientX : event.touches[0].clientX
     if (model.vertical === true) {
-      shift = event.clientY - target.getBoundingClientRect().top 
+      shift = coordY - target.getBoundingClientRect().top 
     } else {
-      shift = event.clientX - target.getBoundingClientRect().left 
+      shift = coordX - target.getBoundingClientRect().left 
     }
 
     this.boundMove = this.fsdMove.bind(this, model, view, shift, target.closest('.fsd__slider-wrapper') as HTMLElement) 
     this.boundOff = this.fsdOff.bind(this) 
     document.addEventListener("mousemove", this.boundMove) 
+    document.addEventListener("touchmove", this.boundMove) 
     document.addEventListener("mouseup", this.boundOff) 
+    document.addEventListener("touchend", this.boundOff) 
+    document.addEventListener("touchcancel", this.boundOff) 
 
   }
 
@@ -144,10 +153,12 @@ export default class Controller {
     }
 
     let distance: number 
+    const coordY = event.clientY ? event.clientY : event.touches[0].clientY
+    const coordX = event.clientX ? event.clientX : event.touches[0].clientX
     if (model.vertical === true) {
-      distance = ((event.clientY - shift - range.getBoundingClientRect().top) / range.offsetHeight) * 100 
+      distance = ((coordY - shift - range.getBoundingClientRect().top) / range.offsetHeight) * 100 
     } else {
-      distance = ((event.clientX - shift - range.getBoundingClientRect().left) / range.offsetWidth) * 100 
+      distance = ((coordX - shift - range.getBoundingClientRect().left) / range.offsetWidth) * 100 
     }
 
     distance = this.setDistance(model, view, slider, distance, sliderSize)
@@ -191,7 +202,10 @@ export default class Controller {
 
   private fsdOff() {
     document.removeEventListener("mousemove", this.boundMove) 
+    document.removeEventListener("touchmove", this.boundMove) 
     document.removeEventListener("mouseup", this.boundOff) 
+    document.removeEventListener("touchend", this.boundOff) 
+    document.removeEventListener("touchcancel", this.boundOff) 
   }
 
   private fsdInteractive(model: Model, view: View, event: MouseEvent) {
