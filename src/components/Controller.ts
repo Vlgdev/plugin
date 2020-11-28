@@ -5,7 +5,8 @@ import {TKey} from './Model'
 export default class Controller {
 
   public boundMove: any 
-  public boundOff: any 
+  public boundOff: any
+  public boundDisableWindowTouchMove: any
 
   constructor(model: Model, view: View) {
 
@@ -121,7 +122,6 @@ export default class Controller {
 
     const target: HTMLElement = event.target as HTMLElement 
     if (!target.closest('.fsd__slider')) return 
-    console.log(event);
     
     let shift = 0
     const coordY = event.clientY ? event.clientY : event.touches[0].clientY
@@ -134,6 +134,10 @@ export default class Controller {
 
     this.boundMove = this.fsdMove.bind(this, model, view, shift, target.closest('.fsd__slider-wrapper') as HTMLElement) 
     this.boundOff = this.fsdOff.bind(this) 
+    this.boundDisableWindowTouchMove = this.disableWindowTouchMove.bind(this)
+    if(event instanceof TouchEvent) {
+      document.addEventListener('touchmove', this.boundDisableWindowTouchMove, {passive: false})
+    }
     document.addEventListener("mousemove", this.boundMove) 
     document.addEventListener("touchmove", this.boundMove) 
     document.addEventListener("mouseup", this.boundOff) 
@@ -142,7 +146,7 @@ export default class Controller {
 
   }
 
-  private fsdMove(model: Model, view: View, shift: number, slider: HTMLElement, event: MouseEvent) {
+  private fsdMove(model: Model, view: View, shift: number, slider: HTMLElement, event: MouseEvent | TouchEvent) {
 
     const range: HTMLElement = model.target.querySelector(".fsd__range") as HTMLElement 
     let sliderSize: number 
@@ -200,12 +204,20 @@ export default class Controller {
     }
   }
 
-  private fsdOff() {
+  private fsdOff(event: MouseEvent | TouchEvent) {
+    if (event instanceof TouchEvent) {
+      document.removeEventListener('touchmove', this.boundDisableWindowTouchMove)
+    }
+    
     document.removeEventListener("mousemove", this.boundMove) 
     document.removeEventListener("touchmove", this.boundMove) 
     document.removeEventListener("mouseup", this.boundOff) 
     document.removeEventListener("touchend", this.boundOff) 
     document.removeEventListener("touchcancel", this.boundOff) 
+  }
+
+  private disableWindowTouchMove(event: TouchEvent) {
+    event.preventDefault()
   }
 
   private fsdInteractive(model: Model, view: View, event: MouseEvent) {
